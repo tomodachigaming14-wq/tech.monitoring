@@ -139,11 +139,92 @@
         .modal-header h2 i { color: #2563eb; }
         .modal-header .close-btn { background: #f1f5f9; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; color: #475569; }
         .modal-header .close-btn:hover { background: #fee2e2; color: #dc2626; }
-        .modal-search { padding: 1rem 2rem; border-bottom: 1px solid #e2e8f0; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; background: #f8fafc; }
-        .modal-search input { flex: 1; min-width: 200px; padding: 0.6rem 1rem; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 0.9rem; outline: none; transition: all 0.3s ease; }
-        .modal-search input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
-        .modal-search .search-info { font-size: 0.8rem; color: #64748b; white-space: nowrap; }
+
+        /* ===== RECORDS MODAL FILTERS ===== */
+        .modal-filters {
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            background: #f8fafc;
+        }
+        .modal-filters .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+        .modal-filters label {
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: #334155;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .modal-filters select,
+        .modal-filters input {
+            padding: 0.4rem 0.8rem;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            outline: none;
+            background: white;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+        .modal-filters select:focus,
+        .modal-filters input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        .modal-filters .filter-btn {
+            background: #2563eb;
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.75rem;
+        }
+        .modal-filters .filter-btn:hover { background: #1d4ed8; }
+        .modal-filters .filter-btn.reset-btn { background: #64748b; }
+        .modal-filters .filter-btn.reset-btn:hover { background: #475569; }
+
+        .modal-search {
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            background: #f8fafc;
+        }
+        .modal-search input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.6rem 1rem;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .modal-search input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        .modal-search .search-info {
+            font-size: 0.8rem;
+            color: #64748b;
+            white-space: nowrap;
+        }
         .modal-search .search-info span { font-weight: 700; color: #1e3a8a; }
+
         .modal-body { padding: 1.5rem 2rem; overflow-y: auto; flex: 1; }
         .modal-body table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         .modal-body table th { background: #f1f5f9; color: #1e3a8a; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 0.8rem 0.8rem; text-align: left; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 10; }
@@ -158,6 +239,8 @@
         @media (max-width: 768px) {
             .modal-box { max-height: 95vh; }
             .modal-header { padding: 1rem; }
+            .modal-filters { padding: 0.8rem 1rem; flex-direction: column; align-items: stretch; }
+            .modal-filters select, .modal-filters input { min-width: 100%; }
             .modal-search { padding: 0.8rem 1rem; flex-direction: column; }
             .modal-search input { width: 100%; min-width: unset; }
             .modal-body { padding: 1rem; }
@@ -167,7 +250,7 @@
             .modal-overlay { padding: 1rem; }
         }
 
-        /* ===== CHART STYLES - ORGANIZED ===== */
+        /* ===== CHART STYLES ===== */
         .chart-filters {
             display: flex;
             flex-wrap: wrap;
@@ -230,7 +313,6 @@
             background: #e2e8f0;
             margin: 0 0.2rem;
         }
-
         .chart-type-selector {
             display: flex;
             gap: 0.4rem;
@@ -255,7 +337,6 @@
             color: white;
         }
         .chart-type-selector button:hover { border-color: #2563eb; }
-
         .chart-container { position: relative; height: 400px; margin-top: 0.5rem; }
         .chart-container canvas { width: 100% !important; height: 100% !important; }
         .chart-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.6rem; margin-top: 1rem; padding: 0.8rem 1rem; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; }
@@ -597,17 +678,60 @@
     </div>
 </div>
 
-<!-- ===== RECORDS MODAL ===== -->
+<!-- ===== RECORDS MODAL - WITH FILTERS ===== -->
 <div class="modal-overlay" id="recordsModal">
     <div class="modal-box">
         <div class="modal-header">
             <h2><i class="fas fa-table"></i> <span id="recordsModalTitle">All Records</span></h2>
             <button class="close-btn" id="closeModalBtn"><i class="fas fa-times"></i></button>
         </div>
+
+        <!-- ===== FILTERS - Date Conducted REMOVED ===== -->
+        <div class="modal-filters">
+            <div class="filter-group">
+                <label for="filterPSGC">PSGC:</label>
+                <input type="text" id="filterPSGC" placeholder="Search PSGC..." style="min-width: 120px;">
+            </div>
+            <div class="filter-group">
+                <label for="filterProvince">Province:</label>
+                <select id="filterProvince">
+                    <option value="all">All Provinces</option>
+                    <option value="Aklan">Aklan</option>
+                    <option value="Antique">Antique</option>
+                    <option value="Capiz">Capiz</option>
+                    <option value="Guimaras">Guimaras</option>
+                    <option value="Iloilo">Iloilo</option>
+                    <option value="Negros Occidental">Negros Occidental</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="filterReportingMonth">Reporting Month:</label>
+                <select id="filterReportingMonth">
+                    <option value="all">All Months</option>
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                </select>
+            </div>
+            <button class="filter-btn" id="applyRecordFilter"><i class="fas fa-filter"></i> Apply</button>
+            <button class="filter-btn reset-btn" id="resetRecordFilter"><i class="fas fa-undo"></i> Reset</button>
+        </div>
+
+        <!-- ===== SEARCH ===== -->
         <div class="modal-search">
-            <input type="text" id="searchInput" placeholder="🔍 Search by PSGC...">
+            <input type="text" id="searchInput" placeholder="🔍 Search by PSGC, Province, City/Municipality...">
             <span class="search-info">Showing <span id="displayCount">0</span> of <span id="totalCount">0</span> records</span>
         </div>
+
         <div class="modal-body" id="modalBody">
             <div style="text-align:center; padding: 2rem; color: #94a3b8;">
                 <i class="fas fa-spinner fa-spin" style="font-size: 2rem;"></i>
@@ -629,8 +753,6 @@
             <button class="close-btn" id="closeChartBtn"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body" id="chartModalBody">
-
-            <!-- ===== Chart Type Selector ===== -->
             <div class="chart-filters" style="border-bottom: none; margin-bottom: 0.5rem; background: transparent; padding: 0 0 0.5rem 0;">
                 <div class="chart-type-selector">
                     <label>Chart Type:</label>
@@ -639,8 +761,6 @@
                     <button data-chart="province">By Province</button>
                 </div>
             </div>
-
-            <!-- ===== FILTERS - ORGANIZED ===== -->
             <div class="chart-filters">
                 <div class="filter-group">
                     <label for="chartMonthFilter">Month:</label>
@@ -660,21 +780,17 @@
                         <option value="December">December</option>
                     </select>
                 </div>
-
                 <div class="filter-group">
                     <label for="chartYearFilter">Year:</label>
                     <input type="number" id="chartYearFilter" placeholder="e.g. 2026" style="width: 100px; min-width: 80px;">
                 </div>
-
                 <div class="filter-group">
                     <label for="chartCategoryFilter">TA Category:</label>
                     <select id="chartCategoryFilter">
                         <option value="all">All Categories</option>
                     </select>
                 </div>
-
                 <div class="filter-divider"></div>
-
                 <div class="filter-group">
                     <label for="chartPlannedFilter">Planned/Requested:</label>
                     <select id="chartPlannedFilter">
@@ -683,7 +799,6 @@
                         <option value="Requested">Requested</option>
                     </select>
                 </div>
-
                 <div class="filter-group">
                     <label for="chartProvinceFilter">Province:</label>
                     <select id="chartProvinceFilter">
@@ -696,47 +811,25 @@
                         <option value="Negros Occidental">Negros Occidental</option>
                     </select>
                 </div>
-
                 <div class="filter-divider"></div>
-
                 <div class="filter-group">
                     <button class="filter-btn" id="applyChartFilter"><i class="fas fa-filter"></i> Apply</button>
                     <button class="filter-btn reset-btn" id="resetChartFilter"><i class="fas fa-undo"></i> Reset</button>
                 </div>
             </div>
-
             <div id="chartContainer">
                 <div class="chart-loading">
                     <i class="fas fa-spinner fa-spin"></i>
                     <p>Loading chart data...</p>
                 </div>
             </div>
-
             <div id="chartSummary" class="chart-summary" style="display: none;">
-                <div class="stat-item">
-                    <div class="stat-value" id="statTotal">0</div>
-                    <div class="stat-label">Total Records</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="statCategories">0</div>
-                    <div class="stat-label">Categories</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="statTopCategory">-</div>
-                    <div class="stat-label">Top Category</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="statMonths">0</div>
-                    <div class="stat-label">Months</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="statPlanned">0</div>
-                    <div class="stat-label">Planned</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="statRequested">0</div>
-                    <div class="stat-label">Requested</div>
-                </div>
+                <div class="stat-item"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Total Records</div></div>
+                <div class="stat-item"><div class="stat-value" id="statCategories">0</div><div class="stat-label">Categories</div></div>
+                <div class="stat-item"><div class="stat-value" id="statTopCategory">-</div><div class="stat-label">Top Category</div></div>
+                <div class="stat-item"><div class="stat-value" id="statMonths">0</div><div class="stat-label">Months</div></div>
+                <div class="stat-item"><div class="stat-value" id="statPlanned">0</div><div class="stat-label">Planned</div></div>
+                <div class="stat-item"><div class="stat-value" id="statRequested">0</div><div class="stat-label">Requested</div></div>
             </div>
         </div>
         <div class="modal-footer">
@@ -774,7 +867,7 @@
     const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ikMuQVy3MBiuK6KuAEGBJ2sod-jlzLwCqsTtenORczg/edit?usp=sharing';
 
     // ============================================
-    // PERSONNEL IN-CHARGE DATA (Stored in Google Sheet)
+    // PERSONNEL IN-CHARGE DATA
     // ============================================
     let picNames = [];
 
@@ -1029,6 +1122,7 @@
     // ============================================
     let currentFormType = 'CLUP';
     let allRecords = [];
+    let filteredRecords = [];
     let chartInstance = null;
     let currentChartType = 'category';
 
@@ -1134,7 +1228,24 @@
     });
 
     // ============================================
-    // GET FORM DATA - WITH REGION CONVERSION
+    // FORMAT DATE HELPER
+    // ============================================
+    function formatDate(dateValue) {
+        if (!dateValue) return '-';
+        if (typeof dateValue === 'string' && dateValue.includes('T')) {
+            return dateValue.split('T')[0];
+        }
+        if (dateValue instanceof Date) {
+            return dateValue.toISOString().split('T')[0];
+        }
+        if (typeof dateValue === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
+            return dateValue;
+        }
+        return dateValue || '-';
+    }
+
+    // ============================================
+    // GET FORM DATA
     // ============================================
     function getFormData(type) {
         const prefix = type.toLowerCase();
@@ -1147,9 +1258,7 @@
             assistance = others ? 'Others: ' + others : '';
         }
 
-        // Get region value and convert to Region_06 format for Google Sheets
         let regionValue = getVal('region');
-        // Convert "Region 6" to "Region_06"
         if (regionValue === 'Region 6') {
             regionValue = 'Region_06';
         }
@@ -1276,7 +1385,7 @@
     }
 
     // ============================================
-    // RECORDS MODAL
+    // RECORDS MODAL - WITH FILTERS (Date Conducted REMOVED)
     // ============================================
     const recordsModal = document.getElementById('recordsModal');
     const modalBody = document.getElementById('modalBody');
@@ -1284,6 +1393,11 @@
     const displayCount = document.getElementById('displayCount');
     const totalCount = document.getElementById('totalCount');
     const footerTotalCount = document.getElementById('footerTotalCount');
+
+    // Filter elements
+    const filterPSGC = document.getElementById('filterPSGC');
+    const filterProvince = document.getElementById('filterProvince');
+    const filterReportingMonth = document.getElementById('filterReportingMonth');
 
     function closeRecordsModal() {
         recordsModal.classList.remove('active');
@@ -1306,6 +1420,44 @@
         if (e.key === 'Escape') closeRecordsModal();
     });
 
+    // ===== APPLY RECORD FILTERS =====
+    function applyRecordFilters() {
+        const psgcFilter = filterPSGC.value.trim().toLowerCase();
+        const provinceFilter = filterProvince.value;
+        const monthFilter = filterReportingMonth.value;
+
+        filteredRecords = allRecords.filter(record => {
+            // PSGC filter
+            if (psgcFilter) {
+                const psgc = (record.PSGC || '').toLowerCase();
+                if (!psgc.includes(psgcFilter)) return false;
+            }
+            // Province filter
+            if (provinceFilter !== 'all') {
+                if ((record.Province || '') !== provinceFilter) return false;
+            }
+            // Month filter
+            if (monthFilter !== 'all') {
+                if ((record['Reporting Month'] || '') !== monthFilter) return false;
+            }
+            return true;
+        });
+
+        renderTable(filteredRecords);
+        displayCount.textContent = filteredRecords.length;
+        footerTotalCount.textContent = filteredRecords.length;
+    }
+
+    document.getElementById('applyRecordFilter').addEventListener('click', applyRecordFilters);
+
+    document.getElementById('resetRecordFilter').addEventListener('click', function() {
+        filterPSGC.value = '';
+        filterProvince.value = 'all';
+        filterReportingMonth.value = 'all';
+        applyRecordFilters();
+    });
+
+    // ===== LOAD RECORDS =====
     async function loadRecords() {
         modalBody.innerHTML = `<div style="text-align:center; padding: 2rem; color: #94a3b8;"><i class="fas fa-spinner fa-spin" style="font-size: 2rem;"></i><p style="margin-top: 1rem;">Loading records...</p></div>`;
         try {
@@ -1313,9 +1465,11 @@
             const result = await response.json();
             if (result.result === 'success') {
                 allRecords = result.records || [];
+                filteredRecords = [...allRecords];
                 totalCount.textContent = allRecords.length;
                 footerTotalCount.textContent = allRecords.length;
                 renderTable(allRecords);
+                displayCount.textContent = allRecords.length;
             } else {
                 modalBody.innerHTML = `<div style="text-align:center; padding: 2rem; color: #dc2626;">Error loading records: ${result.message}</div>`;
             }
@@ -1324,6 +1478,7 @@
         }
     }
 
+    // ===== RENDER TABLE =====
     function renderTable(records) {
         if (!records || records.length === 0) {
             modalBody.innerHTML = `<table><thead><tr><th>#</th><th>PSGC</th><th>Region</th><th>Province</th><th>City/Municipality</th><th>Query Details</th><th>Assistance Type</th><th>TA Category</th><th>Planned/Requested</th><th>Date Conducted</th><th>Reporting Month</th><th>Personnel In-Charge</th></tr></thead><tbody><tr class="no-records"><td colspan="12">📭 No records found for ${currentFormType}.</td></tr></tbody></table>`;
@@ -1353,7 +1508,12 @@
             html += `<tr><td>${index + 1}</td>`;
             columns.forEach(col => {
                 let value = record[col.key] || '-';
-                if (value.length > 30) value = value.substring(0, 30) + '...';
+                if (col.key === 'Date Conducted') {
+                    value = formatDate(value);
+                }
+                if (value.length > 30) {
+                    value = value.substring(0, 30) + '...';
+                }
                 html += `<td>${value}</td>`;
             });
             html += `</tr>`;
@@ -1364,11 +1524,21 @@
         displayCount.textContent = records.length;
     }
 
+    // ===== SEARCH INPUT =====
     searchInput.addEventListener('input', function() {
         const term = this.value.trim().toLowerCase();
-        if (!term) { renderTable(allRecords); return; }
-        const filtered = allRecords.filter(r => (r.PSGC || '').toLowerCase().includes(term));
+        if (!term) {
+            applyRecordFilters();
+            return;
+        }
+        const filtered = filteredRecords.filter(r => {
+            const psgc = (r.PSGC || '').toLowerCase();
+            const province = (r.Province || '').toLowerCase();
+            const city = (r['City/Municipality'] || '').toLowerCase();
+            return psgc.includes(term) || province.includes(term) || city.includes(term);
+        });
         renderTable(filtered);
+        displayCount.textContent = filtered.length;
     });
 
     // ============================================
