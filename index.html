@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
+        /* ===== BASE STYLES ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; }
         body { min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 2rem 1.5rem; background: #f4f7fc; position: relative; }
         body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at 20% 50%, rgba(26,115,232,0.08) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(0,200,150,0.06) 0%, transparent 60%), linear-gradient(145deg, #f0f4f8 0%, #e8edf3 100%); z-index: 0; }
@@ -34,14 +35,53 @@
         .loading-progress { width: 200px; height: 2px; background: rgba(0,0,0,0.1); border-radius: 4px; margin-top: 30px; overflow: hidden; }
         .loading-progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #1a73e8, #00c896); border-radius: 4px; animation: progressLoad 3s ease-in-out forwards; }
         @keyframes progressLoad { 0% { width: 0%; } 100% { width: 100%; } }
+
         .card { max-width: 880px; width: 100%; background: white; border-radius: 28px; padding: 2.5rem 3rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); position: relative; z-index: 1; opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
         .card.visible { opacity: 1; transform: translateY(0); }
+
         .header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 1.5rem; margin-bottom: 2rem; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 1rem; }
         .header-left { display: flex; align-items: center; gap: 16px; }
         .header-icon { width: 52px; height: 52px; background: linear-gradient(135deg, #1e3a8a, #2563eb); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: white; box-shadow: 0 8px 24px rgba(26,115,232,0.3); }
         .header h1 { font-size: 1.6rem; font-weight: 700; color: #1e3a8a; letter-spacing: -0.5px; }
         .header h1 small { display: block; font-size: 0.7rem; font-weight: 400; color: #64748b; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
         .header-badge { background: rgba(0,200,150,0.15); border: 1px solid rgba(0,200,150,0.2); padding: 0.4rem 1rem; border-radius: 40px; color: #00c896; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+
+        /* ===== TOGGLE BUTTONS ===== */
+        .toggle-container {
+            display: flex;
+            gap: 0;
+            margin-bottom: 2rem;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid #e2e8f0;
+            background: #f8fafc;
+        }
+        .toggle-btn {
+            flex: 1;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            background: transparent;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #64748b;
+            position: relative;
+        }
+        .toggle-btn i { margin-right: 8px; }
+        .toggle-btn.active {
+            background: #1e3a8a;
+            color: white;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+        }
+        .toggle-btn:not(.active):hover {
+            background: #e2e8f0;
+            color: #1e3a8a;
+        }
+        .toggle-btn:first-child { border-radius: 14px 0 0 14px; }
+        .toggle-btn:last-child { border-radius: 0 14px 14px 0; }
+
+        /* ===== FORM STYLES ===== */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem 1.8rem; }
         .full-width { grid-column: 1 / -1; }
         .field-group { display: flex; flex-direction: column; gap: 0.4rem; }
@@ -55,11 +95,31 @@
         .field-group select option { background: #ffffff; color: #0f172a; white-space: normal; word-wrap: break-word; padding: 0.5rem 0.8rem; }
         .field-group select option[value=""] { white-space: nowrap; }
         .field-group textarea { resize: vertical; min-height: 60px; }
+        .field-group select option { white-space: normal !important; word-wrap: break-word !important; padding: 6px 12px !important; line-height: 1.4 !important; min-height: 30px !important; height: auto !important; }
+        .field-group select { min-height: 50px; }
+
+        /* ===== FORM TYPE VISIBILITY ===== */
+        .form-type { display: none; }
+        .form-type.active { display: block; }
+
+        /* ===== BUTTONS ===== */
         .btn-submit { background: linear-gradient(135deg, #2563eb, #1e3a8a); border: none; padding: 1rem 2rem; border-radius: 60px; font-weight: 700; font-size: 1rem; color: white; display: inline-flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: all 0.3s ease; width: 100%; margin-top: 1.2rem; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.25); position: relative; overflow: hidden; font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; }
         .btn-submit::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); transition: left 0.6s ease; }
         .btn-submit:hover::before { left: 100%; }
         .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(37, 99, 235, 0.35); }
         .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+        .btn-test { background: #f1f5f9; border: 1px solid #e2e8f0; padding: 0.5rem 1rem; border-radius: 40px; color: #475569; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: all 0.3s ease; flex: 1; font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; }
+        .btn-test:hover { background: #e2e8f0; transform: translateY(-1px); }
+        .btn-test i { margin-right: 4px; }
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .btn-view-all { background: #1e3a8a; border: 1px solid #1e3a8a; color: white; }
+        .btn-view-all:hover { background: #2563eb; border-color: #2563eb; }
+        .btn-chart { background: #059669; border: 1px solid #059669; color: white; }
+        .btn-chart:hover { background: #047857; border-color: #047857; }
+        /* NEW: Google Sheet Button */
+        .btn-sheet { background: #0f9d58; border: 1px solid #0f9d58; color: white; }
+        .btn-sheet:hover { background: #0b7e48; border-color: #0b7e48; }
+
         .status-message { margin-top: 1.2rem; padding: 0.8rem 1.2rem; border-radius: 16px; background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; display: flex; align-items: center; gap: 12px; transition: all 0.3s ease; font-size: 0.85rem; min-height: 52px; }
         .status-message i { font-size: 1rem; color: #2563eb; flex-shrink: 0; }
         .status-message.success { background: #f0fdf4; border-color: #86efac; color: #166534; }
@@ -69,354 +129,72 @@
         .footer-note { margin-top: 1.5rem; font-size: 0.65rem; color: #94a3b8; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 1.2rem; letter-spacing: 0.5px; }
         .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.15); border-top: 2px solid white; border-radius: 50%; animation: spin 0.7s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .btn-test { background: #f1f5f9; border: 1px solid #e2e8f0; padding: 0.5rem 1rem; border-radius: 40px; color: #475569; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: all 0.3s ease; flex: 1; font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; }
-        .btn-test:hover { background: #e2e8f0; transform: translateY(-1px); }
-        .btn-test i { margin-right: 4px; }
-        .btn-group { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
-        .btn-view-all { background: #1e3a8a; border: 1px solid #1e3a8a; color: white; }
-        .btn-view-all:hover { background: #2563eb; border-color: #2563eb; }
-        .btn-chart { background: #059669; border: 1px solid #059669; color: white; }
-        .btn-chart:hover { background: #047857; border-color: #047857; }
-        @media (max-width: 700px) { .card { padding: 1.5rem; border-radius: 2rem; } .form-grid { grid-template-columns: 1fr; gap: 0.8rem; } .full-width { grid-column: 1; } .header h1 { font-size: 1.2rem; } .header-icon { width: 42px; height: 42px; font-size: 1.2rem; } .header-badge { display: none; } .loading-logo { width: 140px; height: 140px; } .loading-logo .logo-image { width: 60px; } .btn-group { flex-direction: column; } }
+
+        .others-text-container { display: none; margin-top: 0.5rem; }
+        .others-text-container.active { display: block; }
+        .others-text-container input { background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 16px; padding: 0.75rem 1.1rem; font-size: 0.9rem; transition: all 0.25s ease; outline: none; width: 100%; color: #0f172a; font-weight: 400; font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; }
+        .others-text-container input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+
+        @media (max-width: 700px) { .card { padding: 1.5rem; border-radius: 2rem; } .form-grid { grid-template-columns: 1fr; gap: 0.8rem; } .full-width { grid-column: 1; } .header h1 { font-size: 1.2rem; } .header-icon { width: 42px; height: 42px; font-size: 1.2rem; } .header-badge { display: none; } .loading-logo { width: 140px; height: 140px; } .loading-logo .logo-image { width: 60px; } .btn-group { flex-direction: column; } .toggle-btn { font-size: 0.75rem; padding: 0.6rem 1rem; } }
         @media (max-width: 400px) { .card { padding: 1rem; } .field-group input, .field-group select, .field-group textarea { padding: 0.6rem 0.9rem; font-size: 0.85rem; } .loading-logo { width: 100px; height: 100px; } .loading-logo .logo-image { width: 45px; } }
 
-        /* ===== MODAL/POPUP STYLES ===== */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            z-index: 99999;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            animation: fadeIn 0.3s ease;
-        }
+        /* ===== MODAL STYLES ===== */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 99999; justify-content: center; align-items: center; padding: 2rem; animation: fadeIn 0.3s ease; }
         .modal-overlay.active { display: flex; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .modal-box {
-            background: white;
-            border-radius: 24px;
-            max-width: 1200px;
-            width: 100%;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            animation: slideUp 0.3s ease;
-        }
+        .modal-box { background: white; border-radius: 24px; max-width: 1200px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid #e2e8f0;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .modal-header h2 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #1e3a8a;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 1rem; }
+        .modal-header h2 { font-size: 1.3rem; font-weight: 700; color: #1e3a8a; display: flex; align-items: center; gap: 10px; }
         .modal-header h2 i { color: #2563eb; }
-        .modal-header .close-btn {
-            background: #f1f5f9;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #475569;
-        }
+        .modal-header .close-btn { background: #f1f5f9; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; color: #475569; }
         .modal-header .close-btn:hover { background: #fee2e2; color: #dc2626; }
-
-        .modal-search {
-            padding: 1rem 2rem;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            align-items: center;
-            background: #f8fafc;
-        }
-        .modal-search input {
-            flex: 1;
-            min-width: 200px;
-            padding: 0.6rem 1rem;
-            border: 1.5px solid #cbd5e1;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-        .modal-search input:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-        }
-        .modal-search .search-info {
-            font-size: 0.8rem;
-            color: #64748b;
-            white-space: nowrap;
-        }
+        .modal-search { padding: 1rem 2rem; border-bottom: 1px solid #e2e8f0; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; background: #f8fafc; }
+        .modal-search input { flex: 1; min-width: 200px; padding: 0.6rem 1rem; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 0.9rem; outline: none; transition: all 0.3s ease; }
+        .modal-search input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+        .modal-search .search-info { font-size: 0.8rem; color: #64748b; white-space: nowrap; }
         .modal-search .search-info span { font-weight: 700; color: #1e3a8a; }
-
-        .modal-body {
-            padding: 1.5rem 2rem;
-            overflow-y: auto;
-            flex: 1;
-        }
-        .modal-body table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-        }
-        .modal-body table th {
-            background: #f1f5f9;
-            color: #1e3a8a;
-            font-weight: 700;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 0.8rem 0.8rem;
-            text-align: left;
-            border-bottom: 2px solid #e2e8f0;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        .modal-body table td {
-            padding: 0.7rem 0.8rem;
-            border-bottom: 1px solid #f1f5f9;
-            color: #334155;
-            max-width: 200px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
+        .modal-body { padding: 1.5rem 2rem; overflow-y: auto; flex: 1; }
+        .modal-body table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .modal-body table th { background: #f1f5f9; color: #1e3a8a; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 0.8rem 0.8rem; text-align: left; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 10; }
+        .modal-body table td { padding: 0.7rem 0.8rem; border-bottom: 1px solid #f1f5f9; color: #334155; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .modal-body table tr:hover td { background: #f8fafc; }
-        .modal-body table .no-records td {
-            text-align: center;
-            padding: 3rem 0;
-            color: #94a3b8;
-            font-size: 1rem;
-        }
-
-        .modal-footer {
-            padding: 1rem 2rem;
-            border-top: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            background: #f8fafc;
-            border-radius: 0 0 24px 24px;
-        }
-        .modal-footer .record-count {
-            font-size: 0.85rem;
-            color: #475569;
-        }
+        .modal-body table .no-records td { text-align: center; padding: 3rem 0; color: #94a3b8; font-size: 1rem; }
+        .modal-footer { padding: 1rem 2rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: #f8fafc; border-radius: 0 0 24px 24px; }
+        .modal-footer .record-count { font-size: 0.85rem; color: #475569; }
         .modal-footer .record-count span { font-weight: 700; color: #1e3a8a; }
-        .modal-footer .btn-close-modal {
-            background: #2563eb;
-            border: none;
-            padding: 0.5rem 1.5rem;
-            border-radius: 40px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.85rem;
-        }
+        .modal-footer .btn-close-modal { background: #2563eb; border: none; padding: 0.5rem 1.5rem; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 0.85rem; }
         .modal-footer .btn-close-modal:hover { background: #1d4ed8; }
+        @media (max-width: 768px) { .modal-box { max-height: 95vh; } .modal-header { padding: 1rem; } .modal-search { padding: 0.8rem 1rem; flex-direction: column; } .modal-search input { width: 100%; min-width: unset; } .modal-body { padding: 1rem; } .modal-body table { font-size: 0.7rem; } .modal-body table th, .modal-body table td { padding: 0.4rem 0.4rem; } .modal-footer { padding: 0.8rem 1rem; flex-direction: column; text-align: center; } .modal-overlay { padding: 1rem; } }
 
-        @media (max-width: 768px) {
-            .modal-box { max-height: 95vh; }
-            .modal-header { padding: 1rem; }
-            .modal-search { padding: 0.8rem 1rem; flex-direction: column; }
-            .modal-search input { width: 100%; min-width: unset; }
-            .modal-body { padding: 1rem; }
-            .modal-body table { font-size: 0.7rem; }
-            .modal-body table th, .modal-body table td { padding: 0.4rem 0.4rem; }
-            .modal-footer { padding: 0.8rem 1rem; flex-direction: column; text-align: center; }
-            .modal-overlay { padding: 1rem; }
-        }
-
-        /* ===== OTHERS TEXT BOX ===== */
-        .others-text-container {
-            display: none;
-            margin-top: 0.5rem;
-        }
-        .others-text-container.active {
-            display: block;
-        }
-        .others-text-container input {
-            background: #ffffff;
-            border: 1.5px solid #cbd5e1;
-            border-radius: 16px;
-            padding: 0.75rem 1.1rem;
-            font-size: 0.9rem;
-            transition: all 0.25s ease;
-            outline: none;
-            width: 100%;
-            color: #0f172a;
-            font-weight: 400;
-            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
-        }
-        .others-text-container input:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-        }
-
-        /* ===== CHART MODAL STYLES ===== */
-        .chart-filters {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            align-items: center;
-            padding: 0.5rem 0 1rem 0;
-        }
-        .chart-filters label {
-            font-weight: 600;
-            font-size: 0.8rem;
-            color: #334155;
-        }
-        .chart-filters select, .chart-filters input {
-            padding: 0.5rem 1rem;
-            border: 1.5px solid #cbd5e1;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            outline: none;
-            background: white;
-            transition: all 0.3s ease;
-        }
-        .chart-filters select:focus, .chart-filters input:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-        }
-        .chart-filters .filter-btn {
-            background: #2563eb;
-            border: none;
-            padding: 0.5rem 1.5rem;
-            border-radius: 40px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.85rem;
-        }
-        .chart-filters .filter-btn:hover {
-            background: #1d4ed8;
-        }
-        .chart-filters .filter-btn.reset-btn {
-            background: #64748b;
-        }
-        .chart-filters .filter-btn.reset-btn:hover {
-            background: #475569;
-        }
-        .chart-container {
-            position: relative;
-            height: 400px;
-            margin-top: 1rem;
-        }
-        .chart-container canvas {
-            width: 100% !important;
-            height: 100% !important;
-        }
-        .chart-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 0.8rem;
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: #f8fafc;
-            border-radius: 16px;
-        }
-        .chart-summary .stat-item {
-            text-align: center;
-        }
-        .chart-summary .stat-item .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1e3a8a;
-        }
-        .chart-summary .stat-item .stat-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            color: #64748b;
-            letter-spacing: 0.5px;
-        }
-        .chart-loading {
-            text-align: center;
-            padding: 2rem;
-            color: #94a3b8;
-        }
-        .chart-loading i {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        /* ===== DROPDOWN OPTION WRAPPING ===== */
-        .field-group select option {
-            white-space: normal !important;
-            word-wrap: break-word !important;
-            padding: 6px 12px !important;
-            line-height: 1.4 !important;
-            min-height: 30px !important;
-            height: auto !important;
-        }
-        .field-group select {
-            min-height: 50px;
-        }
-
-        /* Chart type selector */
-        .chart-type-selector {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-        .chart-type-selector button {
-            padding: 0.4rem 1rem;
-            border: 2px solid #cbd5e1;
-            border-radius: 30px;
-            background: white;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.75rem;
-            transition: all 0.3s ease;
-            color: #475569;
-        }
-        .chart-type-selector button.active {
-            border-color: #2563eb;
-            background: #2563eb;
-            color: white;
-        }
-        .chart-type-selector button:hover {
-            border-color: #2563eb;
-        }
+        /* ===== CHART STYLES ===== */
+        .chart-filters { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; padding: 0.5rem 0 1rem 0; }
+        .chart-filters label { font-weight: 600; font-size: 0.8rem; color: #334155; }
+        .chart-filters select, .chart-filters input { padding: 0.5rem 1rem; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 0.85rem; outline: none; background: white; transition: all 0.3s ease; }
+        .chart-filters select:focus, .chart-filters input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+        .chart-filters .filter-btn { background: #2563eb; border: none; padding: 0.5rem 1.5rem; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 0.85rem; }
+        .chart-filters .filter-btn:hover { background: #1d4ed8; }
+        .chart-filters .filter-btn.reset-btn { background: #64748b; }
+        .chart-filters .filter-btn.reset-btn:hover { background: #475569; }
+        .chart-container { position: relative; height: 400px; margin-top: 1rem; }
+        .chart-container canvas { width: 100% !important; height: 100% !important; }
+        .chart-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.8rem; margin-top: 1.5rem; padding: 1rem; background: #f8fafc; border-radius: 16px; }
+        .chart-summary .stat-item { text-align: center; }
+        .chart-summary .stat-item .stat-value { font-size: 1.5rem; font-weight: 700; color: #1e3a8a; }
+        .chart-summary .stat-item .stat-label { font-size: 0.7rem; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px; }
+        .chart-loading { text-align: center; padding: 2rem; color: #94a3b8; }
+        .chart-loading i { font-size: 2rem; margin-bottom: 1rem; }
+        .chart-type-selector { display: flex; gap: 0.5rem; align-items: center; }
+        .chart-type-selector button { padding: 0.4rem 1rem; border: 2px solid #cbd5e1; border-radius: 30px; background: white; cursor: pointer; font-weight: 600; font-size: 0.75rem; transition: all 0.3s ease; color: #475569; }
+        .chart-type-selector button.active { border-color: #2563eb; background: #2563eb; color: white; }
+        .chart-type-selector button:hover { border-color: #2563eb; }
     </style>
 </head>
 <body>
 
 <div id="loadingOverlay">
     <div class="loading-logo">
-        <img src="https://www.dhsud.gov.ph/wp-content/uploads/2021/10/dhsud-logo.png" alt="DHSUD Logo" class="logo-image" onerror="this.style.display='none'">
+        <img src="DHSUD_LOGO.png" alt="DHSUD Logo" class="logo-image" onerror="this.style.display='none'">
         <div class="ring-container">
             <svg viewBox="0 0 200 200">
                 <circle class="ring" cx="100" cy="100" r="80" />
@@ -449,126 +227,252 @@
         </div>
     </div>
 
-    <form id="taForm">
-        <div class="form-grid">
-            <div class="field-group">
-                <label><i class="fas fa-hashtag"></i> PSGC <span class="required">*</span></label>
-                <input type="text" id="psgc" placeholder="Auto-fills when city selected" readonly required>
-            </div>
+    <!-- Toggle Buttons -->
+    <div class="toggle-container">
+        <button class="toggle-btn active" data-type="CLUP" id="toggleCLUP">
+            <i class="fas fa-file-alt"></i> CLUP
+        </button>
+        <button class="toggle-btn" data-type="PDPFP" id="togglePDPFP">
+            <i class="fas fa-file-pdf"></i> PDPFP
+        </button>
+    </div>
 
-            <div class="field-group">
-                <label><i class="fas fa-map-pin"></i> Region <span class="required">*</span></label>
-                <select id="region" required>
-                    <option value="Region_VI">Region VI - Western Visayas</option>
-                </select>
-            </div>
+    <!-- ===== CLUP FORM ===== -->
+    <div class="form-type active" id="formCLUP">
+        <form id="clupForm">
+            <div class="form-grid">
+                <div class="field-group">
+                    <label><i class="fas fa-hashtag"></i> PSGC <span class="required">*</span></label>
+                    <input type="text" id="clup_psgc" placeholder="Auto-fills when city selected" readonly required>
+                </div>
 
-            <div class="field-group">
-                <label><i class="fas fa-landmark"></i> Province <span class="required">*</span></label>
-                <select id="province" required>
-                    <option value="">Select Province...</option>
-                    <option value="Aklan">Aklan</option>
-                    <option value="Antique">Antique</option>
-                    <option value="Capiz">Capiz</option>
-                    <option value="Guimaras">Guimaras</option>
-                    <option value="Iloilo">Iloilo</option>
-                    <option value="Negros Occidental">Negros Occidental</option>
-                </select>
-            </div>
+                <div class="field-group">
+                    <label><i class="fas fa-map-pin"></i> Region <span class="required">*</span></label>
+                    <select id="clup_region" required>
+                        <option value="Region_VI">Region VI - Western Visayas</option>
+                    </select>
+                </div>
 
-            <div class="field-group">
-                <label><i class="fas fa-city"></i> City/Municipality <span class="required">*</span></label>
-                <select id="cityMun" required>
-                    <option value="">Select City/Municipality...</option>
-                </select>
-            </div>
+                <div class="field-group">
+                    <label><i class="fas fa-landmark"></i> Province <span class="required">*</span></label>
+                    <select id="clup_province" required>
+                        <option value="">Select Province...</option>
+                        <option value="Aklan">Aklan</option>
+                        <option value="Antique">Antique</option>
+                        <option value="Capiz">Capiz</option>
+                        <option value="Guimaras">Guimaras</option>
+                        <option value="Iloilo">Iloilo</option>
+                        <option value="Negros Occidental">Negros Occidental</option>
+                    </select>
+                </div>
 
-            <div class="field-group full-width">
-                <label><i class="fas fa-quote-right"></i> Query / TA Details <span class="required">*</span></label>
-                <textarea id="queryDetails" placeholder="Describe the request or technical assistance..." rows="2" required></textarea>
-            </div>
+                <div class="field-group">
+                    <label><i class="fas fa-city"></i> City/Municipality <span class="required">*</span></label>
+                    <select id="clup_cityMun" required>
+                        <option value="">Select City/Municipality...</option>
+                    </select>
+                </div>
 
-            <div class="field-group full-width">
-                <label><i class="fas fa-headset"></i> Type of Assistance Provided <span class="required">*</span></label>
-                <select id="assistanceType" required>
-                    <option value="">Select Type of Assistance...</option>
-                    <option value="Assistance through on-field mentoring and coaching">Assistance through on-field mentoring and coaching</option>
-                    <option value="Assistance to walk-in/by-appointment consultations">Assistance to walk-in/by-appointment consultations</option>
-                    <option value="Assistance through online platform, telephone, and letter queries">Assistance through online platform, telephone, and letter queries</option>
-                    <option value="Assistance by serving as a resource speaker (i.e., tapped as or requested as an RP) to other capability development activities conducted by other bodies (i.e., other DHSUD offices, external bodies such as NGAs, NGOs, Academe, etc.)">Assistance by serving as a resource speaker (i.e., tapped as or requested as an RP) to other capability development activities conducted by other bodies (i.e., other DHSUD offices, external bodies such as NGAs, NGOs, Academe, etc.)</option>
-                    <option value="Assistance through the provision of orientations/briefings">Assistance through the provision of orientations/briefings</option>
-                    <option value="Assistance through provision of inputs and recommendations for draft policies, guidelines, plans, framework, and other policy documents of DHSUD and other concerned agencies/institutions.">Assistance through provision of inputs and recommendations for draft policies, guidelines, plans, framework, and other policy documents of DHSUD and other concerned agencies/institutions.</option>
-                    <option value="Others (to specify in the remarks)">Others (to specify in the remarks)</option>
-                </select>
-                <div class="others-text-container" id="othersContainer">
-                    <input type="text" id="othersText" placeholder="Please specify other type of assistance...">
+                <div class="field-group full-width">
+                    <label><i class="fas fa-quote-right"></i> Query / TA Details <span class="required">*</span></label>
+                    <textarea id="clup_queryDetails" placeholder="Describe the request or technical assistance..." rows="2" required></textarea>
+                </div>
+
+                <div class="field-group full-width">
+                    <label><i class="fas fa-headset"></i> Type of Assistance Provided <span class="required">*</span></label>
+                    <select id="clup_assistanceType" required>
+                        <option value="">Select Type of Assistance...</option>
+                        <option value="Assistance through on-field mentoring and coaching">Assistance through on-field mentoring and coaching</option>
+                        <option value="Assistance to walk-in/by-appointment consultations">Assistance to walk-in/by-appointment consultations</option>
+                        <option value="Assistance through online platform, telephone, and letter queries">Assistance through online platform, telephone, and letter queries</option>
+                        <option value="Assistance by serving as a resource speaker (i.e., tapped as or requested as an RP) to other capability development activities conducted by other bodies (i.e., other DHSUD offices, external bodies such as NGAs, NGOs, Academe, etc.)">Assistance by serving as a resource speaker (i.e., tapped as or requested as an RP) to other capability development activities conducted by other bodies (i.e., other DHSUD offices, external bodies such as NGAs, NGOs, Academe, etc.)</option>
+                        <option value="Assistance through the provision of orientations/briefings">Assistance through the provision of orientations/briefings</option>
+                        <option value="Assistance through provision of inputs and recommendations for draft policies, guidelines, plans, framework, and other policy documents of DHSUD and other concerned agencies/institutions.">Assistance through provision of inputs and recommendations for draft policies, guidelines, plans, framework, and other policy documents of DHSUD and other concerned agencies/institutions.</option>
+                        <option value="Others (to specify in the remarks)">Others (to specify in the remarks)</option>
+                    </select>
+                    <div class="others-text-container" id="clup_othersContainer">
+                        <input type="text" id="clup_othersText" placeholder="Please specify other type of assistance...">
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label><i class="fas fa-tag"></i> TA Category <span class="required">*</span></label>
+                    <select id="clup_taCategory" required>
+                        <option value="">Select...</option>
+                        <option value="CDRA">CDRA</option>
+                        <option value="Formulation and Updating">Formulation and Updating</option>
+                        <option value="GIS">GIS</option>
+                        <option value="Implementation and Monitoring">Implementation and Monitoring</option>
+                        <option value="Other CLUP and ZO Related Technical Assistance">Other CLUP and ZO Related Technical Assistance</option>
+                        <option value="PlanSmart for SHS">PlanSmart for SHS</option>
+                        <option value="Review and Approval">Review and Approval</option>
+                        <option value="Urban Development">Urban Development</option>
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <label><i class="fas fa-clock"></i> Planned / Requested <span class="required">*</span></label>
+                    <select id="clup_plannedRequested" required>
+                        <option value="">Select...</option>
+                        <option value="Planned">Planned</option>
+                        <option value="Requested">Requested</option>
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <label><i class="fas fa-calendar-alt"></i> Date Conducted <span class="required">*</span></label>
+                    <input type="date" id="clup_dateConducted" required>
+                </div>
+
+                <div class="field-group">
+                    <label><i class="fas fa-calendar-check"></i> Reporting Month <span class="required">*</span></label>
+                    <select id="clup_reportingMonth" required>
+                        <option value="">Select Month...</option>
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July">July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
+                    </select>
+                </div>
+
+                <div class="field-group full-width">
+                    <label><i class="fas fa-pencil-alt"></i> Remarks</label>
+                    <input type="text" id="clup_remarks" placeholder="N/A or additional notes">
+                </div>
+
+                <div class="field-group full-width">
+                    <label><i class="fas fa-link"></i> Link to MOV</label>
+                    <input type="url" id="clup_linkMov" placeholder="https://drive.google.com/...">
                 </div>
             </div>
 
-            <div class="field-group">
-                <label><i class="fas fa-tag"></i> TA Category <span class="required">*</span></label>
-                <select id="taCategory" required>
-                    <option value="">Select...</option>
-                    <option value="CDRA or PCRD">CDRA or PCRD</option>
-                    <option value="Formulation or Updating">Formulation or Updating</option>
-                    <option value="GIS">GIS</option>
-                    <option value="Other PDPFP Related Technical Assistance">Other PDPFP Related Technical Assistance</option>
-                    <option value="PlanSmart for SHS">PlanSmart for SHS</option>
-                    <option value="Review and Approval">Review and Approval</option>
-                    <option value="Urban Development">Urban Development</option>
-                </select>
+            <button type="submit" class="btn-submit" id="clup_submitBtn">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>Save to Google Sheet (CLUP)</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- ===== PDPFP FORM ===== -->
+    <div class="form-type" id="formPDPFP">
+        <form id="pdpfpForm">
+            <div class="form-grid">
+                <div class="field-group full-width">
+                    <label><i class="fas fa-map-pin"></i> Region <span class="required">*</span></label>
+                    <select id="pdpfp_region" required>
+                        <option value="Region_VI">Region VI - Western Visayas</option>
+                    </select>
+                </div>
+
+                <div class="field-group full-width">
+                    <label><i class="fas fa-landmark"></i> Province <span class="required">*</span></label>
+                    <select id="pdpfp_province" required>
+                        <option value="">Select Province...</option>
+                        <option value="Aklan">Aklan</option>
+                        <option value="Antique">Antique</option>
+                        <option value="Capiz">Capiz</option>
+                        <option value="Guimaras">Guimaras</option>
+                        <option value="Iloilo">Iloilo</option>
+                        <option value="Negros Occidental">Negros Occidental</option>
+                    </select>
+                </div>
+
+                <div class="field-group full-width">
+                    <label><i class="fas fa-quote-right"></i> Query / TA Details <span class="required">*</span></label>
+                    <textarea id="pdpfp_queryDetails" placeholder="Describe the request or technical assistance..." rows="2" required></textarea>
+                </div>
+
+                <div class="field-group full-width">
+                    <label><i class="fas fa-headset"></i> Type of Assistance Provided <span class="required">*</span></label>
+                    <select id="pdpfp_assistanceType" required>
+                        <option value="">Select Type of Assistance...</option>
+                        <option value="Assistance through on-field mentoring and coaching">Assistance through on-field mentoring and coaching</option>
+                        <option value="Assistance to walk-in/by-appointment consultations">Assistance to walk-in/by-appointment consultations</option>
+                        <option value="Assistance through online platform, telephone, and letter queries">Assistance through online platform, telephone, and letter queries</option>
+                        <option value="Assistance by serving as a resource speaker (i.e., tapped as or requested as an RP) to other capability development activities conducted by other bodies (i.e., other DHSUD offices, external bodies such as NGAs, NGOs, Academe, etc.)">Assistance by serving as a resource speaker (i.e., tapped as or requested as an RP) to other capability development activities conducted by other bodies (i.e., other DHSUD offices, external bodies such as NGAs, NGOs, Academe, etc.)</option>
+                        <option value="Assistance through the provision of orientations/briefings">Assistance through the provision of orientations/briefings</option>
+                        <option value="Assistance through provision of inputs and recommendations for draft policies, guidelines, plans, framework, and other policy documents of DHSUD and other concerned agencies/institutions.">Assistance through provision of inputs and recommendations for draft policies, guidelines, plans, framework, and other policy documents of DHSUD and other concerned agencies/institutions.</option>
+                        <option value="Others (to specify in the remarks)">Others (to specify in the remarks)</option>
+                    </select>
+                    <div class="others-text-container" id="pdpfp_othersContainer">
+                        <input type="text" id="pdpfp_othersText" placeholder="Please specify other type of assistance...">
+                    </div>
+                </div>
+
+                <div class="field-group full-width">
+                    <label><i class="fas fa-tag"></i> TA Category <span class="required">*</span></label>
+                    <select id="pdpfp_taCategory" required>
+                        <option value="">Select...</option>
+                        <option value="CDRA & PCRD">CDRA & PCRD</option>
+                        <option value="Formulation and Updating">Formulation and Updating</option>
+                        <option value="GIS">GIS</option>
+                        <option value="Other CLUP and ZO Related Technical Assistance">Other CLUP and ZO Related Technical Assistance</option>
+                        <option value="PlanSmart for SHS">PlanSmart for SHS</option>
+                        <option value="Review and Approval">Review and Approval</option>
+                        <option value="Urban Development">Urban Development</option>
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <label><i class="fas fa-clock"></i> Planned / Requested <span class="required">*</span></label>
+                    <select id="pdpfp_plannedRequested" required>
+                        <option value="">Select...</option>
+                        <option value="Planned">Planned</option>
+                        <option value="Requested">Requested</option>
+                    </select>
+                </div>
+
+                <div class="field-group">
+                    <label><i class="fas fa-calendar-alt"></i> Date Conducted <span class="required">*</span></label>
+                    <input type="date" id="pdpfp_dateConducted" required>
+                </div>
+
+                <div class="field-group">
+                    <label><i class="fas fa-calendar-check"></i> Reporting Month <span class="required">*</span></label>
+                    <select id="pdpfp_reportingMonth" required>
+                        <option value="">Select Month...</option>
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July">July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
+                    </select>
+                </div>
+
+                <div class="field-group full-width">
+                    <label><i class="fas fa-pencil-alt"></i> Remarks</label>
+                    <input type="text" id="pdpfp_remarks" placeholder="N/A or additional notes">
+                </div>
+
+                <div class="field-group full-width">
+                    <label><i class="fas fa-link"></i> Link to MOV</label>
+                    <input type="url" id="pdpfp_linkMov" placeholder="https://drive.google.com/...">
+                </div>
             </div>
 
-            <div class="field-group">
-                <label><i class="fas fa-clock"></i> Planned / Requested <span class="required">*</span></label>
-                <select id="plannedRequested" required>
-                    <option value="">Select...</option>
-                    <option value="Planned">Planned</option>
-                    <option value="Requested">Requested</option>
-                </select>
-            </div>
+            <button type="submit" class="btn-submit" id="pdpfp_submitBtn">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>Save to Google Sheet (PDPFP)</span>
+            </button>
+        </form>
+    </div>
 
-            <div class="field-group">
-                <label><i class="fas fa-calendar-alt"></i> Date Conducted <span class="required">*</span></label>
-                <input type="date" id="dateConducted" required>
-            </div>
-
-            <div class="field-group">
-                <label><i class="fas fa-calendar-check"></i> Reporting Month <span class="required">*</span></label>
-                <select id="reportingMonth" required>
-                    <option value="">Select Month...</option>
-                    <option value="January">January</option>
-                    <option value="February">February</option>
-                    <option value="March">March</option>
-                    <option value="April">April</option>
-                    <option value="May">May</option>
-                    <option value="June">June</option>
-                    <option value="July">July</option>
-                    <option value="August">August</option>
-                    <option value="September">September</option>
-                    <option value="October">October</option>
-                    <option value="November">November</option>
-                    <option value="December">December</option>
-                </select>
-            </div>
-
-            <div class="field-group full-width">
-                <label><i class="fas fa-pencil-alt"></i> Remarks</label>
-                <input type="text" id="remarks" placeholder="N/A or additional notes">
-            </div>
-
-            <div class="field-group full-width">
-                <label><i class="fas fa-link"></i> Link to MOV</label>
-                <input type="url" id="linkMov" placeholder="https://drive.google.com/...">
-            </div>
-        </div>
-
-        <button type="submit" class="btn-submit" id="submitBtn">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <span id="btnText">Save to Google Sheet</span>
-        </button>
-    </form>
-
+    <!-- Buttons -->
     <div class="btn-group">
         <button type="button" class="btn-test" id="testBtn">
             <i class="fas fa-vial"></i> Test Connection
@@ -581,6 +485,10 @@
         </button>
         <button type="button" class="btn-test btn-chart" id="chartBtn">
             <i class="fas fa-chart-bar"></i> View Chart
+        </button>
+        <!-- NEW: View Google Sheet Button -->
+        <button type="button" class="btn-test btn-sheet" id="sheetBtn">
+            <i class="fas fa-external-link-alt"></i> View Google Sheet
         </button>
     </div>
 
@@ -598,7 +506,7 @@
 <div class="modal-overlay" id="recordsModal">
     <div class="modal-box">
         <div class="modal-header">
-            <h2><i class="fas fa-table"></i> All Records</h2>
+            <h2><i class="fas fa-table"></i> <span id="recordsModalTitle">All Records</span></h2>
             <button class="close-btn" id="closeModalBtn"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-search">
@@ -622,11 +530,10 @@
 <div class="modal-overlay" id="chartModal">
     <div class="modal-box" style="max-width: 1100px;">
         <div class="modal-header">
-            <h2><i class="fas fa-chart-bar"></i> Monthly Analytics Dashboard</h2>
+            <h2><i class="fas fa-chart-bar"></i> <span id="chartModalTitle">Monthly Analytics Dashboard</span></h2>
             <button class="close-btn" id="closeChartBtn"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body" id="chartModalBody">
-            <!-- Chart Type Selector -->
             <div class="chart-filters">
                 <div class="chart-type-selector">
                     <label>Chart Type:</label>
@@ -636,7 +543,6 @@
                 </div>
             </div>
 
-            <!-- Filters -->
             <div class="chart-filters">
                 <label for="chartMonthFilter">Month:</label>
                 <select id="chartMonthFilter">
@@ -661,13 +567,6 @@
                 <label for="chartCategoryFilter">TA Category:</label>
                 <select id="chartCategoryFilter">
                     <option value="all">All Categories</option>
-                    <option value="CDRA or PCRD">CDRA or PCRD</option>
-                    <option value="Formulation or Updating">Formulation or Updating</option>
-                    <option value="GIS">GIS</option>
-                    <option value="Other PDPFP Related Technical Assistance">Other PDPFP Related Technical Assistance</option>
-                    <option value="PlanSmart for SHS">PlanSmart for SHS</option>
-                    <option value="Review and Approval">Review and Approval</option>
-                    <option value="Urban Development">Urban Development</option>
                 </select>
 
                 <label for="chartPlannedFilter">Planned/Requested:</label>
@@ -735,12 +634,13 @@
 
 <script>
     // ============================================
-    // YOUR APPS SCRIPT WEB APP URL
+    // CONFIGURATION
     // ============================================
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbym8oM9WG397KfNb-XmU39qT-AeTE1dtx0ycpAJqTjBvrejlmX_EYA94jeBGgQrAwXKJw/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzHIq-ne0lonoGwxlchxMSCTndiRyxhUJDyYpl4sO4RWm0dpn0MkgKEqiFXvELTz9LRug/exec';
+    const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ikMuQVy3MBiuK6KuAEGBJ2sod-jlzLwCqsTtenORczg/edit?usp=sharing';
 
     // ============================================
-    // COMPLETE PSGC DATABASE (Region VI)
+    // PSGC DATABASE
     // ============================================
     const psgcData = {
         '600401000': { city: 'Altavas', province: 'Aklan' },
@@ -846,9 +746,6 @@
         '631000000': { city: 'City of Iloilo', province: 'Iloilo' }
     };
 
-    // ============================================
-    // BUILD CITY LIST BY PROVINCE
-    // ============================================
     function getCitiesByProvince(province) {
         const cities = [];
         for (const [psgc, data] of Object.entries(psgcData)) {
@@ -860,677 +757,700 @@
     }
 
     // ============================================
-    // CHART INSTANCE
+    // STATE
     // ============================================
+    let currentFormType = 'CLUP';
+    let allRecords = [];
     let chartInstance = null;
     let currentChartType = 'category';
 
-    (function() {
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const mainCard = document.getElementById('mainCard');
-        const form = document.getElementById('taForm');
-        const statusDiv = document.getElementById('statusMessage');
-        const statusText = document.getElementById('statusText');
-        const submitBtn = document.getElementById('submitBtn');
-        const btnText = document.getElementById('btnText');
-
-        // ===== DOM ELEMENTS =====
-        const psgcInput = document.getElementById('psgc');
-        const provinceSelect = document.getElementById('province');
-        const citySelect = document.getElementById('cityMun');
-        const assistanceSelect = document.getElementById('assistanceType');
-        const othersContainer = document.getElementById('othersContainer');
-        const othersText = document.getElementById('othersText');
-
-        // ===== OTHERS TEXT BOX TOGGLE =====
-        assistanceSelect.addEventListener('change', function() {
-            if (this.value === 'Others (to specify in the remarks)') {
-                othersContainer.classList.add('active');
-                othersText.setAttribute('required', 'required');
-            } else {
-                othersContainer.classList.remove('active');
-                othersText.removeAttribute('required');
-                othersText.value = '';
-            }
+    // ============================================
+    // TOGGLE FUNCTION
+    // ============================================
+    function switchForm(type) {
+        currentFormType = type;
+        
+        document.querySelectorAll('.toggle-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.type === type);
         });
+        
+        document.getElementById('formCLUP').classList.toggle('active', type === 'CLUP');
+        document.getElementById('formPDPFP').classList.toggle('active', type === 'PDPFP');
+        
+        setStatus('📋 ' + type + ' form selected · fill in all required fields', 'info');
+    }
 
-        // ===== POPULATE CITY DROPDOWN =====
-        function populateCities(province) {
-            citySelect.innerHTML = '<option value="">Select City/Municipality...</option>';
-            if (!province) { psgcInput.value = ''; return; }
-            const cities = getCitiesByProvince(province);
-            cities.forEach(({ psgc, city }) => {
-                const option = document.createElement('option');
-                option.value = psgc;
-                option.textContent = city;
-                citySelect.appendChild(option);
-            });
-            psgcInput.value = '';
+    document.getElementById('toggleCLUP').addEventListener('click', function() {
+        switchForm('CLUP');
+    });
+    document.getElementById('togglePDPFP').addEventListener('click', function() {
+        switchForm('PDPFP');
+    });
+
+    // ============================================
+    // DOM REFS
+    // ============================================
+    const clupForm = document.getElementById('clupForm');
+    const pdpfpForm = document.getElementById('pdpfpForm');
+    const statusDiv = document.getElementById('statusMessage');
+    const statusText = document.getElementById('statusText');
+
+    // ============================================
+    // SET STATUS
+    // ============================================
+    function setStatus(message, type = 'info') {
+        statusText.textContent = message;
+        statusDiv.className = 'status-message';
+        const icon = statusDiv.querySelector('i');
+        if (type === 'success') {
+            statusDiv.classList.add('success');
+            icon.className = 'fas fa-check-circle';
+        } else if (type === 'error') {
+            statusDiv.classList.add('error');
+            icon.className = 'fas fa-exclamation-circle';
+        } else {
+            icon.className = 'fas fa-info-circle';
+        }
+    }
+
+    // ============================================
+    // CLUP CITY DEPENDENCY
+    // ============================================
+    const clupProvince = document.getElementById('clup_province');
+    const clupCity = document.getElementById('clup_cityMun');
+    const clupPsgc = document.getElementById('clup_psgc');
+
+    clupProvince.addEventListener('change', function() {
+        const province = this.value;
+        clupCity.innerHTML = '<option value="">Select City/Municipality...</option>';
+        if (!province) { clupPsgc.value = ''; return; }
+        const cities = getCitiesByProvince(province);
+        cities.forEach(({ psgc, city }) => {
+            const opt = document.createElement('option');
+            opt.value = psgc;
+            opt.textContent = city;
+            clupCity.appendChild(opt);
+        });
+        clupPsgc.value = '';
+    });
+
+    clupCity.addEventListener('change', function() {
+        const selected = this.options[this.selectedIndex];
+        clupPsgc.value = selected && selected.value ? selected.value : '';
+        clupPsgc.style.borderColor = selected && selected.value ? '#10b981' : '#cbd5e1';
+    });
+
+    // ============================================
+    // CLUP OTHERS TOGGLE
+    // ============================================
+    document.getElementById('clup_assistanceType').addEventListener('change', function() {
+        const container = document.getElementById('clup_othersContainer');
+        const input = document.getElementById('clup_othersText');
+        if (this.value === 'Others (to specify in the remarks)') {
+            container.classList.add('active');
+            input.setAttribute('required', 'required');
+        } else {
+            container.classList.remove('active');
+            input.removeAttribute('required');
+            input.value = '';
+        }
+    });
+
+    // ============================================
+    // PDPFP OTHERS TOGGLE
+    // ============================================
+    document.getElementById('pdpfp_assistanceType').addEventListener('change', function() {
+        const container = document.getElementById('pdpfp_othersContainer');
+        const input = document.getElementById('pdpfp_othersText');
+        if (this.value === 'Others (to specify in the remarks)') {
+            container.classList.add('active');
+            input.setAttribute('required', 'required');
+        } else {
+            container.classList.remove('active');
+            input.removeAttribute('required');
+            input.value = '';
+        }
+    });
+
+    // ============================================
+    // GET FORM DATA
+    // ============================================
+    function getFormData(type) {
+        const prefix = type.toLowerCase();
+        const getVal = (id) => document.getElementById(prefix + '_' + id).value.trim();
+        const getText = (id) => document.getElementById(prefix + '_' + id).options[document.getElementById(prefix + '_' + id).selectedIndex]?.text || '';
+
+        let assistance = getVal('assistanceType');
+        if (assistance === 'Others (to specify in the remarks)') {
+            const others = document.getElementById(prefix + '_othersText').value.trim();
+            assistance = others ? 'Others: ' + others : '';
         }
 
-        provinceSelect.addEventListener('change', function() {
-            populateCities(this.value);
-        });
+        let payload = {
+            formType: type,
+            region: getVal('region'),
+            province: getVal('province'),
+            queryDetails: getVal('queryDetails'),
+            assistanceType: assistance,
+            taCategory: getVal('taCategory'),
+            plannedRequested: getVal('plannedRequested'),
+            dateConducted: getVal('dateConducted'),
+            reportingMonth: getVal('reportingMonth'),
+            remarks: getVal('remarks') || 'N/A',
+            linkMov: getVal('linkMov') || ''
+        };
 
-        citySelect.addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            if (selectedOption && selectedOption.value) {
-                psgcInput.value = selectedOption.value;
-                psgcInput.style.borderColor = '#10b981';
-            } else {
-                psgcInput.value = '';
-                psgcInput.style.borderColor = '#cbd5e1';
-            }
-        });
-
-        // ===== SET STATUS =====
-        function setStatus(message, type = 'info') {
-            statusText.textContent = message;
-            statusDiv.className = 'status-message';
-            const icon = statusDiv.querySelector('i');
-            if (type === 'success') {
-                statusDiv.classList.add('success');
-                icon.className = 'fas fa-check-circle';
-            } else if (type === 'error') {
-                statusDiv.classList.add('error');
-                icon.className = 'fas fa-exclamation-circle';
-            } else {
-                icon.className = 'fas fa-info-circle';
-            }
+        if (type === 'CLUP') {
+            payload.psgc = getVal('psgc');
+            payload.cityMun = getText('cityMun');
+        } else {
+            payload.psgc = '';
+            payload.cityMun = '';
         }
 
-        function setLoading(loading) {
-            if (loading) {
-                submitBtn.disabled = true;
-                btnText.innerHTML = '<span class="spinner"></span> Saving...';
-                submitBtn.style.opacity = '0.8';
-            } else {
-                submitBtn.disabled = false;
-                btnText.textContent = 'Save to Google Sheet';
-                submitBtn.style.opacity = '1';
+        return payload;
+    }
+
+    // ============================================
+    // VALIDATE FORM
+    // ============================================
+    function validateForm(payload, type) {
+        let required = ['region', 'province', 'queryDetails', 'assistanceType', 'taCategory', 'plannedRequested', 'dateConducted', 'reportingMonth'];
+        
+        if (type === 'CLUP') {
+            required.push('psgc');
+            required.push('cityMun');
+        }
+        
+        for (const field of required) {
+            if (!payload[field]) {
+                setStatus('❌ Please fill in all required fields', 'error');
+                return false;
             }
         }
-
-        // ============================================
-        // RECORDS MODAL
-        // ============================================
-        const recordsModal = document.getElementById('recordsModal');
-        const modalBody = document.getElementById('modalBody');
-        const searchInput = document.getElementById('searchInput');
-        const displayCount = document.getElementById('displayCount');
-        const totalCount = document.getElementById('totalCount');
-        const footerTotalCount = document.getElementById('footerTotalCount');
-        let allRecords = [];
-
-        function closeRecordsModal() {
-            recordsModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
+        
+        if (!payload.assistanceType || payload.assistanceType === '') {
+            setStatus('❌ Please specify the other type of assistance.', 'error');
+            return false;
         }
+        return true;
+    }
 
-        function openRecordsModal() {
-            recordsModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            loadRecords();
+    // ============================================
+    // RESET FORM
+    // ============================================
+    function resetForm(type) {
+        const prefix = type.toLowerCase();
+        const form = document.getElementById(prefix + 'Form');
+        form.reset();
+        document.getElementById(prefix + '_dateConducted').value = new Date().toISOString().split('T')[0];
+        document.getElementById(prefix + '_region').value = 'Region_VI';
+        document.getElementById(prefix + '_province').value = '';
+        
+        if (type === 'CLUP') {
+            document.getElementById(prefix + '_cityMun').innerHTML = '<option value="">Select City/Municipality...</option>';
+            document.getElementById(prefix + '_psgc').value = '';
         }
+        
+        document.getElementById(prefix + '_othersContainer').classList.remove('active');
+        document.getElementById(prefix + '_othersText').value = '';
+        document.getElementById(prefix + '_taCategory').value = '';
+        document.getElementById(prefix + '_plannedRequested').value = '';
+        document.getElementById(prefix + '_reportingMonth').value = '';
+    }
 
-        document.getElementById('closeModalBtn').addEventListener('click', closeRecordsModal);
-        document.getElementById('closeModalBtn2').addEventListener('click', closeRecordsModal);
-        recordsModal.addEventListener('click', function(e) {
-            if (e.target === recordsModal) closeRecordsModal();
-        });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeRecordsModal();
-        });
+    // ============================================
+    // SUBMIT HANDLERS
+    // ============================================
+    clupForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const payload = getFormData('CLUP');
+        if (!validateForm(payload, 'CLUP')) return;
+        await submitRecord(payload, 'CLUP');
+    });
 
-        // ============================================
-        // CHART MODAL
-        // ============================================
-        const chartModal = document.getElementById('chartModal');
+    pdpfpForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const payload = getFormData('PDPFP');
+        if (!validateForm(payload, 'PDPFP')) return;
+        await submitRecord(payload, 'PDPFP');
+    });
 
-        function closeChartModal() {
-            chartModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-            if (chartInstance) {
-                chartInstance.destroy();
-                chartInstance = null;
-            }
-        }
+    async function submitRecord(payload, type) {
+        setLoading(true);
+        setStatus('⏳ Saving to Google Sheet (' + type + ')...', 'info');
 
-        function openChartModal() {
-            chartModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            loadChartData();
-        }
-
-        document.getElementById('closeChartBtn').addEventListener('click', closeChartModal);
-        document.getElementById('closeChartBtn2').addEventListener('click', closeChartModal);
-        chartModal.addEventListener('click', function(e) {
-            if (e.target === chartModal) closeChartModal();
-        });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeChartModal();
-        });
-
-        // ===== CHART TYPE SELECTOR =====
-        document.querySelectorAll('.chart-type-selector button').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.chart-type-selector button').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                currentChartType = this.dataset.chart;
-                loadChartData();
-            });
-        });
-
-        // ============================================
-        // LOAD RECORDS
-        // ============================================
-        async function loadRecords() {
-            modalBody.innerHTML = `<div style="text-align:center; padding: 2rem; color: #94a3b8;"><i class="fas fa-spinner fa-spin" style="font-size: 2rem;"></i><p style="margin-top: 1rem;">Loading records...</p></div>`;
-            try {
-                const response = await fetch(WEB_APP_URL + '?action=records', { method: 'GET' });
-                const result = await response.json();
-                if (result.result === 'success') {
-                    allRecords = result.records || [];
-                    totalCount.textContent = allRecords.length;
-                    footerTotalCount.textContent = allRecords.length;
-                    renderTable(allRecords);
-                } else {
-                    modalBody.innerHTML = `<div style="text-align:center; padding: 2rem; color: #dc2626;">Error loading records: ${result.message}</div>`;
-                }
-            } catch (error) {
-                modalBody.innerHTML = `<div style="text-align:center; padding: 2rem; color: #dc2626;">Failed to load records: ${error.message}</div>`;
-            }
-        }
-
-        // ============================================
-        // RENDER TABLE
-        // ============================================
-        function renderTable(records) {
-            if (!records || records.length === 0) {
-                modalBody.innerHTML = `<table><thead><tr><th>#</th><th>PSGC</th><th>Region</th><th>Province</th><th>City/Municipality</th><th>Query Details</th><th>Assistance Type</th><th>TA Category</th><th>Planned/Requested</th><th>Date Conducted</th><th>Reporting Month</th></tr></thead><tbody><tr class="no-records"><td colspan="11">📭 No records found.</td></tr></tbody></table>`;
-                displayCount.textContent = '0';
-                return;
-            }
-
-            const columns = [
-                { key: 'PSGC', label: 'PSGC' },
-                { key: 'Region', label: 'Region' },
-                { key: 'Province', label: 'Province' },
-                { key: 'City/Municipality', label: 'City/Municipality' },
-                { key: 'Query / TA Details', label: 'Query Details' },
-                { key: 'Type of Assistance Provided', label: 'Assistance Type' },
-                { key: 'TA Category', label: 'TA Category' },
-                { key: 'Planned / Requested', label: 'Planned/Requested' },
-                { key: 'Date Conducted', label: 'Date Conducted' },
-                { key: 'Reporting Month', label: 'Reporting Month' }
-            ];
-
-            let html = `<table><thead><tr><th>#</th>`;
-            columns.forEach(col => html += `<th>${col.label}</th>`);
-            html += `</tr></thead><tbody>`;
-
-            records.forEach((record, index) => {
-                html += `<tr><td>${index + 1}</td>`;
-                columns.forEach(col => {
-                    let value = record[col.key] || '-';
-                    if (value.length > 30) value = value.substring(0, 30) + '...';
-                    html += `<td>${value}</td>`;
-                });
-                html += `</tr>`;
-            });
-
-            html += `</tbody></table>`;
-            modalBody.innerHTML = html;
-            displayCount.textContent = records.length;
-        }
-
-        // ============================================
-        // SEARCH/FILTER BY PSGC
-        // ============================================
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.trim().toLowerCase();
-            if (!searchTerm) { renderTable(allRecords); return; }
-            const filtered = allRecords.filter(record => {
-                const psgc = (record.PSGC || '').toLowerCase();
-                return psgc.includes(searchTerm);
-            });
-            renderTable(filtered);
-        });
-
-        // ============================================
-        // VIEW BUTTONS
-        // ============================================
-        document.getElementById('viewAllBtn').addEventListener('click', openRecordsModal);
-        document.getElementById('chartBtn').addEventListener('click', openChartModal);
-
-        // ============================================
-        // LOAD CHART DATA
-        // ============================================
-        async function loadChartData() {
-            const container = document.getElementById('chartContainer');
-            container.innerHTML = `<div class="chart-loading"><i class="fas fa-spinner fa-spin"></i><p>Loading chart data...</p></div>`;
-            document.getElementById('chartSummary').style.display = 'none';
-
-            try {
-                const response = await fetch(WEB_APP_URL + '?action=records', { method: 'GET' });
-                const result = await response.json();
-                if (result.result === 'success') {
-                    const records = result.records || [];
-                    renderChart(records);
-                } else {
-                    container.innerHTML = `<div style="text-align:center; padding: 2rem; color: #dc2626;">Error loading data: ${result.message}</div>`;
-                }
-            } catch (error) {
-                container.innerHTML = `<div style="text-align:center; padding: 2rem; color: #dc2626;">Failed to load data: ${error.message}</div>`;
-            }
-        }
-
-        // ============================================
-        // RENDER CHART
-        // ============================================
-        function renderChart(records) {
-            const container = document.getElementById('chartContainer');
-            const summary = document.getElementById('chartSummary');
-
-            // Get filter values
-            const monthFilter = document.getElementById('chartMonthFilter').value;
-            const yearFilter = document.getElementById('chartYearFilter').value;
-            const categoryFilter = document.getElementById('chartCategoryFilter').value;
-            const plannedFilter = document.getElementById('chartPlannedFilter').value;
-            const provinceFilter = document.getElementById('chartProvinceFilter').value;
-
-            // Filter data
-            let filtered = records;
-            if (monthFilter !== 'all') {
-                filtered = filtered.filter(r => (r['Reporting Month'] || '') === monthFilter);
-            }
-            if (yearFilter) {
-                filtered = filtered.filter(r => {
-                    const date = r['Date Conducted'] || '';
-                    return date.includes(yearFilter);
-                });
-            }
-            if (categoryFilter !== 'all') {
-                filtered = filtered.filter(r => (r['TA Category'] || '') === categoryFilter);
-            }
-            if (plannedFilter !== 'all') {
-                filtered = filtered.filter(r => (r['Planned / Requested'] || '') === plannedFilter);
-            }
-            if (provinceFilter !== 'all') {
-                filtered = filtered.filter(r => (r['Province'] || '') === provinceFilter);
-            }
-
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align:center; padding: 3rem; color: #94a3b8;">
-                        <i class="fas fa-chart-pie" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                        <p>No data found for the selected filters.</p>
-                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">Try adjusting your filter criteria.</p>
-                    </div>
-                `;
-                summary.style.display = 'none';
-                return;
-            }
-
-            // Update summary stats
-            let plannedCount = filtered.filter(r => (r['Planned / Requested'] || '') === 'Planned').length;
-            let requestedCount = filtered.filter(r => (r['Planned / Requested'] || '') === 'Requested').length;
-            const months = new Set(filtered.map(r => r['Reporting Month']).filter(Boolean));
-
-            document.getElementById('statTotal').textContent = filtered.length;
-            document.getElementById('statPlanned').textContent = plannedCount;
-            document.getElementById('statRequested').textContent = requestedCount;
-            document.getElementById('statMonths').textContent = months.size;
-
-            // Prepare data based on chart type
-            let labels, data, chartTitle, datasetLabel;
-
-            if (currentChartType === 'category') {
-                // TA Category breakdown
-                const categoryCounts = {};
-                const categories = ['CDRA or PCRD', 'Formulation or Updating', 'GIS', 'Other PDPFP Related Technical Assistance', 'PlanSmart for SHS', 'Review and Approval', 'Urban Development'];
-                categories.forEach(cat => categoryCounts[cat] = 0);
-                filtered.forEach(record => {
-                    const cat = record['TA Category'] || 'Other';
-                    if (categoryCounts.hasOwnProperty(cat)) categoryCounts[cat]++;
-                    else categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
-                });
-                labels = Object.keys(categoryCounts).filter(k => categoryCounts[k] > 0);
-                data = labels.map(k => categoryCounts[k]);
-                chartTitle = 'TA Category Distribution' + (monthFilter !== 'all' ? ' - ' + monthFilter : '') + (yearFilter ? ' - ' + yearFilter : '');
-                datasetLabel = 'Number of Requests';
-                document.getElementById('statCategories').textContent = labels.length;
-                let topCat = '-', topCount = 0;
-                labels.forEach((cat, i) => { if (data[i] > topCount) { topCount = data[i]; topCat = cat; } });
-                document.getElementById('statTopCategory').textContent = topCat + ' (' + topCount + ')';
-
-            } else if (currentChartType === 'planned') {
-                // Planned vs Requested by Month
-                const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                const plannedData = {};
-                const requestedData = {};
-                monthOrder.forEach(m => { plannedData[m] = 0; requestedData[m] = 0; });
-                filtered.forEach(record => {
-                    const month = record['Reporting Month'] || '';
-                    const status = record['Planned / Requested'] || '';
-                    if (status === 'Planned') plannedData[month] = (plannedData[month] || 0) + 1;
-                    else if (status === 'Requested') requestedData[month] = (requestedData[month] || 0) + 1;
-                });
-                labels = monthOrder.filter(m => plannedData[m] > 0 || requestedData[m] > 0);
-                chartTitle = 'Planned vs Requested by Month' + (yearFilter ? ' - ' + yearFilter : '');
-                datasetLabel = 'Count';
-                document.getElementById('statCategories').textContent = '2 (Planned/Requested)';
-                document.getElementById('statTopCategory').textContent = plannedCount > requestedCount ? 'Planned (' + plannedCount + ')' : 'Requested (' + requestedCount + ')';
-                
-                // Render as grouped bar chart
-                renderGroupedChart(container, labels, plannedData, requestedData, chartTitle);
-                summary.style.display = 'grid';
-                return;
-
-            } else if (currentChartType === 'province') {
-                // Province breakdown by City/Municipality
-                const selectedProvince = provinceFilter !== 'all' ? provinceFilter : null;
-                let cityData = {};
-                filtered.forEach(record => {
-                    const city = record['City/Municipality'] || 'Unknown';
-                    cityData[city] = (cityData[city] || 0) + 1;
-                });
-                labels = Object.keys(cityData).sort((a, b) => cityData[b] - cityData[a]);
-                data = labels.map(k => cityData[k]);
-                chartTitle = (selectedProvince || 'All Provinces') + ' - Requests by City/Municipality' + (monthFilter !== 'all' ? ' - ' + monthFilter : '') + (yearFilter ? ' - ' + yearFilter : '');
-                datasetLabel = 'Number of Requests';
-                document.getElementById('statCategories').textContent = labels.length;
-                let topCat = '-', topCount = 0;
-                labels.forEach((cat, i) => { if (data[i] > topCount) { topCount = data[i]; topCat = cat; } });
-                document.getElementById('statTopCategory').textContent = topCat + ' (' + topCount + ')';
-            }
-
-            // Render standard bar chart
-            const colors = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#14b8a6', '#6366f1'];
-            const backgroundColors = labels.map((_, i) => colors[i % colors.length]);
-
-            container.innerHTML = `<div class="chart-container"><canvas id="chartCanvas"></canvas></div>`;
-            const ctx = document.getElementById('chartCanvas').getContext('2d');
-
-            if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
-
-            chartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: datasetLabel,
-                        data: data,
-                        backgroundColor: backgroundColors,
-                        borderColor: backgroundColors.map(c => c + '99'),
-                        borderWidth: 2,
-                        borderRadius: 6,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: chartTitle,
-                            font: { size: 16, weight: 'bold' },
-                            color: '#1e3a8a'
-                        },
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.parsed.y + ' request(s)';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { stepSize: 1, precision: 0 },
-                            title: { display: true, text: 'Number of Requests', font: { weight: 'bold' } }
-                        },
-                        x: {
-                            title: { display: true, text: currentChartType === 'category' ? 'TA Category' : 'City/Municipality', font: { weight: 'bold' } }
-                        }
-                    }
-                }
-            });
-
-            summary.style.display = 'grid';
-        }
-
-        // ============================================
-        // RENDER GROUPED CHART (Planned vs Requested)
-        // ============================================
-        function renderGroupedChart(container, labels, plannedData, requestedData, chartTitle) {
-            container.innerHTML = `<div class="chart-container"><canvas id="chartCanvas"></canvas></div>`;
-            const ctx = document.getElementById('chartCanvas').getContext('2d');
-
-            if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
-
-            chartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Planned',
-                            data: labels.map(m => plannedData[m] || 0),
-                            backgroundColor: '#2563eb',
-                            borderColor: '#2563eb99',
-                            borderWidth: 2,
-                            borderRadius: 4,
-                        },
-                        {
-                            label: 'Requested',
-                            data: labels.map(m => requestedData[m] || 0),
-                            backgroundColor: '#f59e0b',
-                            borderColor: '#f59e0b99',
-                            borderWidth: 2,
-                            borderRadius: 4,
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: chartTitle,
-                            font: { size: 16, weight: 'bold' },
-                            color: '#1e3a8a'
-                        },
-                        legend: {
-                            position: 'top',
-                            labels: { font: { weight: 'bold' } }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y + ' request(s)';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { stepSize: 1, precision: 0 },
-                            title: { display: true, text: 'Number of Requests', font: { weight: 'bold' } }
-                        },
-                        x: {
-                            title: { display: true, text: 'Month', font: { weight: 'bold' } }
-                        }
-                    }
-                }
-            });
-        }
-
-        // ============================================
-        // CHART FILTER BUTTONS
-        // ============================================
-        document.getElementById('applyChartFilter').addEventListener('click', function() {
-            loadChartData();
-        });
-
-        document.getElementById('resetChartFilter').addEventListener('click', function() {
-            document.getElementById('chartMonthFilter').value = 'all';
-            document.getElementById('chartYearFilter').value = new Date().getFullYear();
-            document.getElementById('chartCategoryFilter').value = 'all';
-            document.getElementById('chartPlannedFilter').value = 'all';
-            document.getElementById('chartProvinceFilter').value = 'all';
-            loadChartData();
-        });
-
-        // ============================================
-        // FORM SUBMIT
-        // ============================================
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            let assistanceValue = document.getElementById('assistanceType').value;
-            if (assistanceValue === 'Others (to specify in the remarks)') {
-                const othersSpecified = document.getElementById('othersText').value.trim();
-                if (othersSpecified) {
-                    assistanceValue = 'Others: ' + othersSpecified;
-                } else {
-                    setStatus('❌ Please specify the other type of assistance.', 'error');
-                    return;
-                }
-            }
-
-            const payload = {
-                psgc: document.getElementById('psgc').value.trim(),
-                region: document.getElementById('region').value,
-                province: document.getElementById('province').value,
-                cityMun: citySelect.options[citySelect.selectedIndex]?.text || '',
-                queryDetails: document.getElementById('queryDetails').value.trim(),
-                assistanceType: assistanceValue,
-                taCategory: document.getElementById('taCategory').value,
-                plannedRequested: document.getElementById('plannedRequested').value,
-                dateConducted: document.getElementById('dateConducted').value,
-                reportingMonth: document.getElementById('reportingMonth').value,
-                remarks: document.getElementById('remarks').value.trim() || 'N/A',
-                linkMov: document.getElementById('linkMov').value.trim() || ''
-            };
-
-            const required = ['psgc', 'region', 'province', 'cityMun', 'queryDetails', 
-                              'assistanceType', 'taCategory', 'plannedRequested', 
-                              'dateConducted', 'reportingMonth'];
-            for (const field of required) {
-                if (!payload[field]) {
-                    setStatus('❌ Please fill in all required fields', 'error');
-                    return;
-                }
-            }
-
-            setLoading(true);
-            setStatus('⏳ Saving to Google Sheet...', 'info');
-
-            try {
-                await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                setLoading(false);
-                setStatus('✅ Record SAVED to Google Sheet!', 'success');
-                
-                form.reset();
-                document.getElementById('dateConducted').value = new Date().toISOString().split('T')[0];
-                document.getElementById('region').value = 'Region_VI';
-                document.getElementById('province').value = '';
-                document.getElementById('cityMun').innerHTML = '<option value="">Select City/Municipality...</option>';
-                document.getElementById('assistanceType').value = '';
-                document.getElementById('taCategory').value = '';
-                document.getElementById('plannedRequested').value = '';
-                document.getElementById('reportingMonth').value = '';
-                document.getElementById('psgc').value = '';
-                document.getElementById('othersContainer').classList.remove('active');
-                document.getElementById('othersText').value = '';
-
-            } catch (error) {
-                setLoading(false);
-                setStatus('❌ Error saving record: ' + error.message, 'error');
-            }
-        });
-
-        // ============================================
-        // TEST CONNECTION
-        // ============================================
-        document.getElementById('testBtn').addEventListener('click', async function() {
-            setStatus('🔍 Testing connection...', 'info');
-            try {
-                await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'test' })
-                });
-                setStatus('✅ Connection successful! Ready to save.', 'success');
-            } catch (error) {
-                setStatus('❌ Connection failed: ' + error.message, 'error');
-            }
-        });
-
-        // ============================================
-        // DEBUG
-        // ============================================
-        document.getElementById('debugBtn').addEventListener('click', async function() {
-            const testPayload = {
-                psgc: 'TEST-DEBUG-' + Date.now(),
-                region: 'Region_VI',
-                province: 'Aklan',
-                cityMun: 'Kalibo',
-                queryDetails: '🧪 DEBUG TEST - ' + new Date().toISOString(),
-                assistanceType: 'Online Platform',
-                taCategory: 'Formulation or Updating',
-                plannedRequested: 'Requested',
-                dateConducted: new Date().toISOString().split('T')[0],
-                reportingMonth: new Date().toLocaleString('default', { month: 'long' }),
-                remarks: 'Debug test from form',
-                linkMov: 'https://drive.google.com/debug-test'
-            };
+        try {
+            console.log('📤 Sending payload:', payload);
             
-            setStatus('🐛 Sending debug data...', 'info');
-            try {
-                await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(testPayload)
-                });
-                setStatus('✅ Debug data sent successfully!', 'success');
-            } catch (error) {
-                setStatus('❌ Debug failed: ' + error.message, 'error');
+            await fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            setLoading(false);
+            setStatus('✅ Record SAVED to Google Sheet (' + type + ')!', 'success');
+            resetForm(type);
+
+        } catch (error) {
+            setLoading(false);
+            console.error('❌ Error:', error);
+            setStatus('❌ Error saving record: ' + error.message, 'error');
+        }
+    }
+
+    function setLoading(loading) {
+        const btns = ['clup_submitBtn', 'pdpfp_submitBtn'];
+        btns.forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) {
+                btn.disabled = loading;
+                btn.innerHTML = loading ? '<span class="spinner"></span> Saving...' : 
+                    (id.includes('clup') ? '<i class="fas fa-cloud-upload-alt"></i> Save to Google Sheet (CLUP)' : 
+                                          '<i class="fas fa-cloud-upload-alt"></i> Save to Google Sheet (PDPFP)');
             }
         });
+    }
 
-        // ============================================
-        // LOADING & INIT
-        // ============================================
-        setTimeout(function() {
-            loadingOverlay.classList.add('hidden');
-            mainCard.classList.add('visible');
-        }, 3000);
+    // ============================================
+    // RECORDS MODAL
+    // ============================================
+    const recordsModal = document.getElementById('recordsModal');
+    const modalBody = document.getElementById('modalBody');
+    const searchInput = document.getElementById('searchInput');
+    const displayCount = document.getElementById('displayCount');
+    const totalCount = document.getElementById('totalCount');
+    const footerTotalCount = document.getElementById('footerTotalCount');
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('dateConducted').value = today;
-            const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-            document.getElementById('reportingMonth').value = monthNames[new Date().getMonth()];
-            document.getElementById('region').value = 'Region_VI';
-            document.getElementById('chartYearFilter').value = new Date().getFullYear();
-            setStatus('📋 All set · fill & submit', 'info');
+    function closeRecordsModal() {
+        recordsModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    function openRecordsModal() {
+        recordsModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        document.getElementById('recordsModalTitle').textContent = currentFormType + ' Records';
+        loadRecords();
+    }
+
+    document.getElementById('closeModalBtn').addEventListener('click', closeRecordsModal);
+    document.getElementById('closeModalBtn2').addEventListener('click', closeRecordsModal);
+    recordsModal.addEventListener('click', function(e) {
+        if (e.target === recordsModal) closeRecordsModal();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeRecordsModal();
+    });
+
+    async function loadRecords() {
+        modalBody.innerHTML = `<div style="text-align:center; padding: 2rem; color: #94a3b8;"><i class="fas fa-spinner fa-spin" style="font-size: 2rem;"></i><p style="margin-top: 1rem;">Loading records...</p></div>`;
+        try {
+            const response = await fetch(WEB_APP_URL + '?action=records&type=' + currentFormType, { method: 'GET' });
+            const result = await response.json();
+            if (result.result === 'success') {
+                allRecords = result.records || [];
+                totalCount.textContent = allRecords.length;
+                footerTotalCount.textContent = allRecords.length;
+                renderTable(allRecords);
+            } else {
+                modalBody.innerHTML = `<div style="text-align:center; padding: 2rem; color: #dc2626;">Error loading records: ${result.message}</div>`;
+            }
+        } catch (error) {
+            modalBody.innerHTML = `<div style="text-align:center; padding: 2rem; color: #dc2626;">Failed to load records: ${error.message}</div>`;
+        }
+    }
+
+    function renderTable(records) {
+        if (!records || records.length === 0) {
+            modalBody.innerHTML = `<table><thead><tr><th>#</th><th>PSGC</th><th>Region</th><th>Province</th><th>City/Municipality</th><th>Query Details</th><th>Assistance Type</th><th>TA Category</th><th>Planned/Requested</th><th>Date Conducted</th><th>Reporting Month</th></tr></thead><tbody><tr class="no-records"><td colspan="11">📭 No records found for ${currentFormType}.</td></tr></tbody></table>`;
+            displayCount.textContent = '0';
+            return;
+        }
+
+        const columns = [
+            { key: 'PSGC', label: 'PSGC' },
+            { key: 'Region', label: 'Region' },
+            { key: 'Province', label: 'Province' },
+            { key: 'City/Municipality', label: 'City/Municipality' },
+            { key: 'Query / TA Details', label: 'Query Details' },
+            { key: 'Type of Assistance Provided', label: 'Assistance Type' },
+            { key: 'TA Category', label: 'TA Category' },
+            { key: 'Planned / Requested', label: 'Planned/Requested' },
+            { key: 'Date Conducted', label: 'Date Conducted' },
+            { key: 'Reporting Month', label: 'Reporting Month' }
+        ];
+
+        let html = `<table><thead><tr><th>#</th>`;
+        columns.forEach(col => html += `<th>${col.label}</th>`);
+        html += `</tr></thead><tbody>`;
+
+        records.forEach((record, index) => {
+            html += `<tr><td>${index + 1}</td>`;
+            columns.forEach(col => {
+                let value = record[col.key] || '-';
+                if (value.length > 30) value = value.substring(0, 30) + '...';
+                html += `<td>${value}</td>`;
+            });
+            html += `</tr>`;
         });
 
-    })();
+        html += `</tbody></table>`;
+        modalBody.innerHTML = html;
+        displayCount.textContent = records.length;
+    }
+
+    searchInput.addEventListener('input', function() {
+        const term = this.value.trim().toLowerCase();
+        if (!term) { renderTable(allRecords); return; }
+        const filtered = allRecords.filter(r => (r.PSGC || '').toLowerCase().includes(term));
+        renderTable(filtered);
+    });
+
+    // ============================================
+    // CHART MODAL
+    // ============================================
+    const chartModal = document.getElementById('chartModal');
+
+    function closeChartModal() {
+        chartModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+    }
+
+    function openChartModal() {
+        chartModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        document.getElementById('chartModalTitle').textContent = currentFormType + ' Analytics Dashboard';
+        updateCategoryFilter();
+        loadChartData();
+    }
+
+    document.getElementById('closeChartBtn').addEventListener('click', closeChartModal);
+    document.getElementById('closeChartBtn2').addEventListener('click', closeChartModal);
+    chartModal.addEventListener('click', function(e) {
+        if (e.target === chartModal) closeChartModal();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeChartModal();
+    });
+
+    document.querySelectorAll('.chart-type-selector button').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.chart-type-selector button').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentChartType = this.dataset.chart;
+            loadChartData();
+        });
+    });
+
+    function updateCategoryFilter() {
+        const select = document.getElementById('chartCategoryFilter');
+        select.innerHTML = '<option value="all">All Categories</option>';
+        
+        const categories = currentFormType === 'CLUP' ? 
+            ['CDRA', 'Formulation and Updating', 'GIS', 'Implementation and Monitoring', 'Other CLUP and ZO Related Technical Assistance', 'PlanSmart for SHS', 'Review and Approval', 'Urban Development'] :
+            ['CDRA & PCRD', 'Formulation and Updating', 'GIS', 'Other CLUP and ZO Related Technical Assistance', 'PlanSmart for SHS', 'Review and Approval', 'Urban Development'];
+        
+        categories.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat;
+            opt.textContent = cat;
+            select.appendChild(opt);
+        });
+    }
+
+    async function loadChartData() {
+        const container = document.getElementById('chartContainer');
+        container.innerHTML = `<div class="chart-loading"><i class="fas fa-spinner fa-spin"></i><p>Loading chart data...</p></div>`;
+        document.getElementById('chartSummary').style.display = 'none';
+
+        try {
+            const response = await fetch(WEB_APP_URL + '?action=records&type=' + currentFormType, { method: 'GET' });
+            const result = await response.json();
+            if (result.result === 'success') {
+                const records = result.records || [];
+                renderChart(records);
+            } else {
+                container.innerHTML = `<div style="text-align:center; padding: 2rem; color: #dc2626;">Error loading data: ${result.message}</div>`;
+            }
+        } catch (error) {
+            container.innerHTML = `<div style="text-align:center; padding: 2rem; color: #dc2626;">Failed to load data: ${error.message}</div>`;
+        }
+    }
+
+    function renderChart(records) {
+        const container = document.getElementById('chartContainer');
+        const summary = document.getElementById('chartSummary');
+
+        const monthFilter = document.getElementById('chartMonthFilter').value;
+        const yearFilter = document.getElementById('chartYearFilter').value;
+        const categoryFilter = document.getElementById('chartCategoryFilter').value;
+        const plannedFilter = document.getElementById('chartPlannedFilter').value;
+        const provinceFilter = document.getElementById('chartProvinceFilter').value;
+
+        let filtered = records;
+        if (monthFilter !== 'all') filtered = filtered.filter(r => (r['Reporting Month'] || '') === monthFilter);
+        if (yearFilter) filtered = filtered.filter(r => (r['Date Conducted'] || '').includes(yearFilter));
+        if (categoryFilter !== 'all') filtered = filtered.filter(r => (r['TA Category'] || '') === categoryFilter);
+        if (plannedFilter !== 'all') filtered = filtered.filter(r => (r['Planned / Requested'] || '') === plannedFilter);
+        if (provinceFilter !== 'all') filtered = filtered.filter(r => (r['Province'] || '') === provinceFilter);
+
+        if (filtered.length === 0) {
+            container.innerHTML = `<div style="text-align:center; padding: 3rem; color: #94a3b8;"><i class="fas fa-chart-pie" style="font-size: 3rem; margin-bottom: 1rem;"></i><p>No data found for the selected filters.</p><p style="font-size: 0.85rem; margin-top: 0.5rem;">Try adjusting your filter criteria.</p></div>`;
+            summary.style.display = 'none';
+            return;
+        }
+
+        let plannedCount = filtered.filter(r => (r['Planned / Requested'] || '') === 'Planned').length;
+        let requestedCount = filtered.filter(r => (r['Planned / Requested'] || '') === 'Requested').length;
+        const months = new Set(filtered.map(r => r['Reporting Month']).filter(Boolean));
+
+        document.getElementById('statTotal').textContent = filtered.length;
+        document.getElementById('statPlanned').textContent = plannedCount;
+        document.getElementById('statRequested').textContent = requestedCount;
+        document.getElementById('statMonths').textContent = months.size;
+
+        let labels, data, chartTitle, datasetLabel;
+
+        if (currentChartType === 'category') {
+            const categoryCounts = {};
+            const categories = currentFormType === 'CLUP' ?
+                ['CDRA', 'Formulation and Updating', 'GIS', 'Implementation and Monitoring', 'Other CLUP and ZO Related Technical Assistance', 'PlanSmart for SHS', 'Review and Approval', 'Urban Development'] :
+                ['CDRA & PCRD', 'Formulation and Updating', 'GIS', 'Other CLUP and ZO Related Technical Assistance', 'PlanSmart for SHS', 'Review and Approval', 'Urban Development'];
+            categories.forEach(cat => categoryCounts[cat] = 0);
+            filtered.forEach(r => {
+                const cat = r['TA Category'] || 'Other';
+                if (categoryCounts.hasOwnProperty(cat)) categoryCounts[cat]++;
+                else categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+            });
+            labels = Object.keys(categoryCounts).filter(k => categoryCounts[k] > 0);
+            data = labels.map(k => categoryCounts[k]);
+            chartTitle = currentFormType + ' - TA Category Distribution' + (monthFilter !== 'all' ? ' - ' + monthFilter : '') + (yearFilter ? ' - ' + yearFilter : '');
+            datasetLabel = 'Number of Requests';
+            document.getElementById('statCategories').textContent = labels.length;
+            let topCat = '-', topCount = 0;
+            labels.forEach((cat, i) => { if (data[i] > topCount) { topCount = data[i]; topCat = cat; } });
+            document.getElementById('statTopCategory').textContent = topCat + ' (' + topCount + ')';
+
+            renderBarChart(container, labels, data, chartTitle, datasetLabel);
+            summary.style.display = 'grid';
+            return;
+
+        } else if (currentChartType === 'planned') {
+            const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const plannedData = {}, requestedData = {};
+            monthOrder.forEach(m => { plannedData[m] = 0; requestedData[m] = 0; });
+            filtered.forEach(r => {
+                const month = r['Reporting Month'] || '';
+                const status = r['Planned / Requested'] || '';
+                if (status === 'Planned') plannedData[month] = (plannedData[month] || 0) + 1;
+                else if (status === 'Requested') requestedData[month] = (requestedData[month] || 0) + 1;
+            });
+            labels = monthOrder.filter(m => plannedData[m] > 0 || requestedData[m] > 0);
+            chartTitle = currentFormType + ' - Planned vs Requested by Month' + (yearFilter ? ' - ' + yearFilter : '');
+            document.getElementById('statCategories').textContent = '2 (Planned/Requested)';
+            document.getElementById('statTopCategory').textContent = plannedCount > requestedCount ? 'Planned (' + plannedCount + ')' : 'Requested (' + requestedCount + ')';
+            renderGroupedChart(container, labels, plannedData, requestedData, chartTitle);
+            summary.style.display = 'grid';
+            return;
+
+        } else if (currentChartType === 'province') {
+            const cityData = {};
+            filtered.forEach(r => {
+                const city = r['City/Municipality'] || 'Unknown';
+                cityData[city] = (cityData[city] || 0) + 1;
+            });
+            labels = Object.keys(cityData).sort((a, b) => cityData[b] - cityData[a]);
+            data = labels.map(k => cityData[k]);
+            chartTitle = currentFormType + ' - Requests by City/Municipality' + (monthFilter !== 'all' ? ' - ' + monthFilter : '') + (yearFilter ? ' - ' + yearFilter : '');
+            datasetLabel = 'Number of Requests';
+            document.getElementById('statCategories').textContent = labels.length;
+            let topCat = '-', topCount = 0;
+            labels.forEach((cat, i) => { if (data[i] > topCount) { topCount = data[i]; topCat = cat; } });
+            document.getElementById('statTopCategory').textContent = topCat + ' (' + topCount + ')';
+            renderBarChart(container, labels, data, chartTitle, datasetLabel);
+            summary.style.display = 'grid';
+            return;
+        }
+    }
+
+    function renderBarChart(container, labels, data, chartTitle, datasetLabel) {
+        const colors = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#14b8a6', '#6366f1'];
+        const backgroundColors = labels.map((_, i) => colors[i % colors.length]);
+
+        container.innerHTML = `<div class="chart-container"><canvas id="chartCanvas"></canvas></div>`;
+        const ctx = document.getElementById('chartCanvas').getContext('2d');
+
+        if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+
+        chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: datasetLabel,
+                    data: data,
+                    backgroundColor: backgroundColors,
+                    borderColor: backgroundColors.map(c => c + '99'),
+                    borderWidth: 2,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: { display: true, text: chartTitle, font: { size: 16, weight: 'bold' }, color: '#1e3a8a' },
+                    legend: { display: false },
+                    tooltip: { callbacks: { label: function(context) { return context.parsed.y + ' request(s)'; } } }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 }, title: { display: true, text: 'Number of Requests', font: { weight: 'bold' } } },
+                    x: { title: { display: true, text: currentChartType === 'category' ? 'TA Category' : 'City/Municipality', font: { weight: 'bold' } } }
+                }
+            }
+        });
+    }
+
+    function renderGroupedChart(container, labels, plannedData, requestedData, chartTitle) {
+        container.innerHTML = `<div class="chart-container"><canvas id="chartCanvas"></canvas></div>`;
+        const ctx = document.getElementById('chartCanvas').getContext('2d');
+
+        if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+
+        chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: 'Planned', data: labels.map(m => plannedData[m] || 0), backgroundColor: '#2563eb', borderColor: '#2563eb99', borderWidth: 2, borderRadius: 4 },
+                    { label: 'Requested', data: labels.map(m => requestedData[m] || 0), backgroundColor: '#f59e0b', borderColor: '#f59e0b99', borderWidth: 2, borderRadius: 4 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: { display: true, text: chartTitle, font: { size: 16, weight: 'bold' }, color: '#1e3a8a' },
+                    legend: { position: 'top', labels: { font: { weight: 'bold' } } },
+                    tooltip: { callbacks: { label: function(context) { return context.dataset.label + ': ' + context.parsed.y + ' request(s)'; } } }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 }, title: { display: true, text: 'Number of Requests', font: { weight: 'bold' } } },
+                    x: { title: { display: true, text: 'Month', font: { weight: 'bold' } } }
+                }
+            }
+        });
+    }
+
+    // ============================================
+    // CHART FILTER BUTTONS
+    // ============================================
+    document.getElementById('applyChartFilter').addEventListener('click', loadChartData);
+
+    document.getElementById('resetChartFilter').addEventListener('click', function() {
+        document.getElementById('chartMonthFilter').value = 'all';
+        document.getElementById('chartYearFilter').value = new Date().getFullYear();
+        document.getElementById('chartCategoryFilter').value = 'all';
+        document.getElementById('chartPlannedFilter').value = 'all';
+        document.getElementById('chartProvinceFilter').value = 'all';
+        loadChartData();
+    });
+
+    // ============================================
+    // TEST & DEBUG
+    // ============================================
+    document.getElementById('testBtn').addEventListener('click', async function() {
+        setStatus('🔍 Testing connection...', 'info');
+        try {
+            await fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'test' })
+            });
+            setStatus('✅ Connection successful! Ready to save.', 'success');
+        } catch (error) {
+            setStatus('❌ Connection failed: ' + error.message, 'error');
+        }
+    });
+
+    document.getElementById('debugBtn').addEventListener('click', async function() {
+        const testPayload = {
+            formType: 'CLUP',
+            psgc: 'TEST-DEBUG-' + Date.now(),
+            region: 'Region_VI',
+            province: 'Aklan',
+            cityMun: 'Kalibo',
+            queryDetails: '🧪 DEBUG TEST - ' + new Date().toISOString(),
+            assistanceType: 'Online Platform',
+            taCategory: 'Formulation and Updating',
+            plannedRequested: 'Requested',
+            dateConducted: new Date().toISOString().split('T')[0],
+            reportingMonth: new Date().toLocaleString('default', { month: 'long' }),
+            remarks: 'Debug test from form',
+            linkMov: 'https://drive.google.com/debug-test'
+        };
+
+        setStatus('🐛 Sending debug data...', 'info');
+        try {
+            await fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(testPayload)
+            });
+            setStatus('✅ Debug data sent successfully!', 'success');
+        } catch (error) {
+            setStatus('❌ Debug failed: ' + error.message, 'error');
+        }
+    });
+
+    // ============================================
+    // VIEW ALL RECORDS
+    // ============================================
+    document.getElementById('viewAllBtn').addEventListener('click', openRecordsModal);
+
+    // ============================================
+    // VIEW CHART
+    // ============================================
+    document.getElementById('chartBtn').addEventListener('click', openChartModal);
+
+    // ============================================
+    // VIEW GOOGLE SHEET - NEW!
+    // ============================================
+    document.getElementById('sheetBtn').addEventListener('click', function() {
+        window.open(GOOGLE_SHEET_URL, '_blank');
+        setStatus('📊 Opening Google Sheet in new tab...', 'info');
+    });
+
+    // ============================================
+    // INIT
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('clup_dateConducted').value = today;
+        document.getElementById('pdpfp_dateConducted').value = today;
+
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const currentMonth = monthNames[new Date().getMonth()];
+        document.getElementById('clup_reportingMonth').value = currentMonth;
+        document.getElementById('pdpfp_reportingMonth').value = currentMonth;
+
+        document.getElementById('clup_region').value = 'Region_VI';
+        document.getElementById('pdpfp_region').value = 'Region_VI';
+        document.getElementById('chartYearFilter').value = new Date().getFullYear();
+
+        setStatus('📋 All set · select CLUP or PDPFP', 'info');
+    });
+
+    setTimeout(function() {
+        document.getElementById('loadingOverlay').classList.add('hidden');
+        document.getElementById('mainCard').classList.add('visible');
+    }, 3000);
 </script>
 </body>
 </html>
