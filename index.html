@@ -9,1120 +9,286 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-    /* ===== BASE STYLES ===== */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Inter", "Segoe UI", Roboto, sans-serif;
-    }
-    body {
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 2rem 1.5rem;
-        background: #f4f7fc;
-        position: relative;
-    }
-    body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(ellipse at 20% 50%, rgba(26, 115, 232, 0.08) 0%, transparent 60%),
-            radial-gradient(ellipse at 80% 50%, rgba(0, 200, 150, 0.06) 0%, transparent 60%),
-            linear-gradient(145deg, #f0f4f8 0%, #e8edf3 100%);
-        z-index: 0;
-    }
-    #loadingOverlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: #f4f7fc;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        transition:
-            opacity 1.2s ease,
-            visibility 1.2s ease;
-    }
-    #loadingOverlay.hidden {
-        opacity: 0;
-        visibility: hidden;
-    }
-    .loading-logo {
-        position: relative;
-        width: 200px;
-        height: 200px;
-        margin-bottom: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .loading-logo .ring-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        animation: pulseLogo 2s ease-in-out infinite;
-    }
-    .loading-logo .ring {
-        fill: none;
-        stroke: #1a73e8;
-        stroke-width: 3;
-        stroke-linecap: round;
-        stroke-dasharray: 300;
-        stroke-dashoffset: 300;
-        animation: drawRing 2.5s ease-in-out infinite;
-    }
-    .loading-logo .ring:nth-child(2) {
-        stroke: #00c896;
-        stroke-dasharray: 250;
-        stroke-dashoffset: 250;
-        animation-delay: 0.5s;
-    }
-    .loading-logo .ring:nth-child(3) {
-        stroke: #ffb347;
-        stroke-dasharray: 200;
-        stroke-dashoffset: 200;
-        animation-delay: 1s;
-    }
-    .loading-logo .logo-image {
-        position: relative;
-        z-index: 2;
-        width: 80px;
-        height: auto;
-        border-radius: 12px;
-        object-fit: contain;
-        filter: drop-shadow(0 4px 20px rgba(26, 115, 232, 0.3));
-    }
-    @keyframes drawRing {
-        0% {
-            stroke-dashoffset: 300;
-        }
-        50% {
-            stroke-dashoffset: 0;
-        }
-        100% {
-            stroke-dashoffset: -300;
-        }
-    }
-    @keyframes pulseLogo {
-        0%,
-        100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.03);
-        }
-    }
-    .loading-text {
-        color: #334155;
-        font-size: 1.1rem;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        font-weight: 300;
-        animation: fadeText 1.5s ease-in-out infinite;
-    }
-    .loading-text span {
-        color: #1a73e8;
-        font-weight: 600;
-    }
-    .loading-dots {
-        display: inline-block;
-        margin-left: 5px;
-    }
-    .loading-dots span {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        background: #1a73e8;
-        border-radius: 50%;
-        margin: 0 3px;
-        animation: dotBounce 1.4s ease-in-out infinite both;
-    }
-    .loading-dots span:nth-child(1) {
-        animation-delay: 0s;
-    }
-    .loading-dots span:nth-child(2) {
-        animation-delay: 0.2s;
-    }
-    .loading-dots span:nth-child(3) {
-        animation-delay: 0.4s;
-    }
-    @keyframes dotBounce {
-        0%,
-        80%,
-        100% {
-            transform: scale(0.6);
-            opacity: 0.4;
-        }
-        40% {
-            transform: scale(1.2);
-            opacity: 1;
-        }
-    }
-    @keyframes fadeText {
-        0%,
-        100% {
-            opacity: 0.6;
-        }
-        50% {
-            opacity: 1;
-        }
-    }
-    .loading-progress {
-        width: 200px;
-        height: 2px;
-        background: rgba(0, 0, 0, 0.1);
-        border-radius: 4px;
-        margin-top: 30px;
-        overflow: hidden;
-    }
-    .loading-progress-bar {
-        height: 100%;
-        width: 0%;
-        background: linear-gradient(90deg, #1a73e8, #00c896);
-        border-radius: 4px;
-        animation: progressLoad 3s ease-in-out forwards;
-    }
-    @keyframes progressLoad {
-        0% {
-            width: 0%;
-        }
-        100% {
-            width: 100%;
-        }
-    }
+        /* ===== BASE STYLES ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Inter", "Segoe UI", Roboto, sans-serif; }
+        body { min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 2rem 1.5rem; background: #f4f7fc; position: relative; }
+        body::before { content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at 20% 50%, rgba(26, 115, 232, 0.08) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(0, 200, 150, 0.06) 0%, transparent 60%), linear-gradient(145deg, #f0f4f8 0%, #e8edf3 100%); z-index: 0; }
+        #loadingOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #f4f7fc; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; transition: opacity 1.2s ease, visibility 1.2s ease; }
+        #loadingOverlay.hidden { opacity: 0; visibility: hidden; }
+        .loading-logo { position: relative; width: 200px; height: 200px; margin-bottom: 30px; display: flex; align-items: center; justify-content: center; }
+        .loading-logo .ring-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; animation: pulseLogo 2s ease-in-out infinite; }
+        .loading-logo .ring { fill: none; stroke: #1a73e8; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 300; stroke-dashoffset: 300; animation: drawRing 2.5s ease-in-out infinite; }
+        .loading-logo .ring:nth-child(2) { stroke: #00c896; stroke-dasharray: 250; stroke-dashoffset: 250; animation-delay: 0.5s; }
+        .loading-logo .ring:nth-child(3) { stroke: #ffb347; stroke-dasharray: 200; stroke-dashoffset: 200; animation-delay: 1s; }
+        .loading-logo .logo-image { position: relative; z-index: 2; width: 80px; height: auto; border-radius: 12px; object-fit: contain; filter: drop-shadow(0 4px 20px rgba(26, 115, 232, 0.3)); }
+        @keyframes drawRing { 0% { stroke-dashoffset: 300; } 50% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -300; } }
+        @keyframes pulseLogo { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+        .loading-text { color: #334155; font-size: 1.1rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 300; animation: fadeText 1.5s ease-in-out infinite; }
+        .loading-text span { color: #1a73e8; font-weight: 600; }
+        .loading-dots { display: inline-block; margin-left: 5px; }
+        .loading-dots span { display: inline-block; width: 8px; height: 8px; background: #1a73e8; border-radius: 50%; margin: 0 3px; animation: dotBounce 1.4s ease-in-out infinite both; }
+        .loading-dots span:nth-child(1) { animation-delay: 0s; }
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes dotBounce { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1.2); opacity: 1; } }
+        @keyframes fadeText { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+        .loading-progress { width: 200px; height: 2px; background: rgba(0, 0, 0, 0.1); border-radius: 4px; margin-top: 30px; overflow: hidden; }
+        .loading-progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #1a73e8, #00c896); border-radius: 4px; animation: progressLoad 3s ease-in-out forwards; }
+        @keyframes progressLoad { 0% { width: 0%; } 100% { width: 100%; } }
+        .card { max-width: 880px; width: 100%; background: white; border-radius: 28px; padding: 2.5rem 3rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); position: relative; z-index: 1; opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .card.visible { opacity: 1; transform: translateY(0); }
+        .header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 1.5rem; margin-bottom: 2rem; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 1rem; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header-icon { width: 52px; height: 52px; background: linear-gradient(135deg, #1e3a8a, #2563eb); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: white; box-shadow: 0 8px 24px rgba(26, 115, 232, 0.3); }
+        .header h1 { font-size: 1.6rem; font-weight: 700; color: #1e3a8a; letter-spacing: -0.5px; }
+        .header h1 small { display: block; font-size: 0.7rem; font-weight: 400; color: #64748b; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+        .header-badge { background: rgba(0, 200, 150, 0.15); border: 1px solid rgba(0, 200, 150, 0.2); padding: 0.4rem 1rem; border-radius: 40px; color: #00c896; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+        .toggle-container { display: flex; gap: 0; margin-bottom: 2rem; border-radius: 16px; overflow: hidden; border: 2px solid #e2e8f0; background: #f8fafc; }
+        .toggle-btn { flex: 1; padding: 0.8rem 1.5rem; border: none; background: transparent; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; color: #64748b; position: relative; }
+        .toggle-btn i { margin-right: 8px; }
+        .toggle-btn.active { background: #1e3a8a; color: white; box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3); }
+        .toggle-btn:not(.active):hover { background: #e2e8f0; color: #1e3a8a; }
+        .toggle-btn:first-child { border-radius: 14px 0 0 14px; }
+        .toggle-btn:last-child { border-radius: 0 14px 14px 0; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem 1.8rem; }
+        .full-width { grid-column: 1 / -1; }
+        .field-group { display: flex; flex-direction: column; gap: 0.4rem; }
+        .field-group label { font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.6px; color: #334155; display: flex; align-items: center; gap: 8px; }
+        .field-group label i { color: #2563eb; font-size: 0.75rem; width: 16px; }
+        .field-group label .required { color: #dc2626; font-size: 0.6rem; }
+        .field-group input:read-only { background: #f1f5f9; cursor: not-allowed; color: #475569; }
+        .field-group input, .field-group select, .field-group textarea { background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 16px; padding: 0.75rem 1.1rem; font-size: 0.9rem; transition: all 0.25s ease; outline: none; width: 100%; color: #0f172a; font-weight: 400; font-family: "Inter", "Segoe UI", Roboto, sans-serif; }
+        .field-group input:focus, .field-group select:focus, .field-group textarea:focus { border-color: #2563eb; background: #ffffff; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+        .field-group select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23475569' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; cursor: pointer; color: #0f172a; }
+        .field-group select option { background: #ffffff; color: #0f172a; white-space: normal; word-wrap: break-word; padding: 0.5rem 0.8rem; }
+        .field-group select option[value=""] { white-space: nowrap; }
+        .field-group textarea { resize: vertical; min-height: 60px; }
+        .field-group select option { white-space: normal !important; word-wrap: break-word !important; padding: 6px 12px !important; line-height: 1.4 !important; min-height: 30px !important; height: auto !important; }
+        .field-group select { min-height: 50px; }
+        .pic-container { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .pic-container select { flex: 1; min-width: 200px; }
+        .pic-btn { padding: 0.5rem 1rem; border: none; border-radius: 12px; font-weight: 600; font-size: 0.75rem; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 6px; font-family: "Inter", "Segoe UI", Roboto, sans-serif; white-space: nowrap; }
+        .pic-btn-add { background: #10b981; color: white; }
+        .pic-btn-add:hover { background: #059669; transform: translateY(-1px); }
+        .pic-btn-delete { background: #ef4444; color: white; }
+        .pic-btn-delete:hover { background: #dc2626; transform: translateY(-1px); }
+        .pic-btn i { font-size: 0.7rem; }
+        .form-type { display: none; }
+        .form-type.active { display: block; }
+        .btn-submit { background: linear-gradient(135deg, #2563eb, #1e3a8a); border: none; padding: 1rem 2rem; border-radius: 60px; font-weight: 700; font-size: 1rem; color: white; display: inline-flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: all 0.3s ease; width: 100%; margin-top: 1.2rem; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.25); position: relative; overflow: hidden; font-family: "Inter", "Segoe UI", Roboto, sans-serif; }
+        .btn-submit::before { content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent); transition: left 0.6s ease; }
+        .btn-submit:hover::before { left: 100%; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(37, 99, 235, 0.35); }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+        .btn-test { background: #f1f5f9; border: 1px solid #e2e8f0; padding: 0.5rem 1rem; border-radius: 40px; color: #475569; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: all 0.3s ease; flex: 1; font-family: "Inter", "Segoe UI", Roboto, sans-serif; }
+        .btn-test:hover { background: #e2e8f0; transform: translateY(-1px); }
+        .btn-test i { margin-right: 4px; }
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .btn-view-all { background: #1e3a8a; border: 1px solid #1e3a8a; color: white; }
+        .btn-view-all:hover { background: #2563eb; border-color: #2563eb; }
+        .btn-chart { background: #059669; border: 1px solid #059669; color: white; }
+        .btn-chart:hover { background: #047857; border-color: #047857; }
+        .btn-sheet { background: #0f9d58; border: 1px solid #0f9d58; color: white; }
+        .btn-sheet:hover { background: #0b7e48; border-color: #0b7e48; }
+        .status-message { margin-top: 1.2rem; padding: 0.8rem 1.2rem; border-radius: 16px; background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; display: flex; align-items: center; gap: 12px; transition: all 0.3s ease; font-size: 0.85rem; min-height: 52px; }
+        .status-message i { font-size: 1rem; color: #2563eb; flex-shrink: 0; }
+        .status-message.success { background: #f0fdf4; border-color: #86efac; color: #166534; }
+        .status-message.success i { color: #10b981; }
+        .status-message.error { background: #fef2f2; border-color: #fca5a5; color: #991b1b; }
+        .status-message.error i { color: #dc2626; }
+        .footer-note { margin-top: 1.5rem; font-size: 0.65rem; color: #94a3b8; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 1.2rem; letter-spacing: 0.5px; }
+        .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255, 255, 255, 0.15); border-top: 2px solid white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .others-text-container { display: none; margin-top: 0.5rem; }
+        .others-text-container.active { display: block; }
+        .others-text-container input { background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 16px; padding: 0.75rem 1.1rem; font-size: 0.9rem; transition: all 0.25s ease; outline: none; width: 100%; color: #0f172a; font-weight: 400; font-family: "Inter", "Segoe UI", Roboto, sans-serif; }
+        .others-text-container input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+        .logo-image { height: 50px; width: auto; display: block; }
+        .header-icon, .header-logo { display: flex; align-items: center; }
 
-    .card {
-        max-width: 880px;
-        width: 100%;
-        background: white;
-        border-radius: 28px;
-        padding: 2.5rem 3rem;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        position: relative;
-        z-index: 1;
-        opacity: 0;
-        transform: translateY(30px);
-        transition:
-            opacity 0.8s ease,
-            transform 0.8s ease;
-    }
-    .card.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
+        @media (max-width: 700px) {
+            .card { padding: 1.5rem; border-radius: 2rem; }
+            .form-grid { grid-template-columns: 1fr; gap: 0.8rem; }
+            .full-width { grid-column: 1; }
+            .header h1 { font-size: 1.2rem; }
+            .header-icon { width: 42px; height: 42px; font-size: 1.2rem; }
+            .header-badge { display: none; }
+            .loading-logo { width: 140px; height: 140px; }
+            .loading-logo .logo-image { width: 60px; }
+            .btn-group { flex-direction: column; }
+            .toggle-btn { font-size: 0.75rem; padding: 0.6rem 1rem; }
+            .pic-container { flex-direction: column; }
+            .pic-container select { width: 100%; }
+            .pic-btn { width: 100%; justify-content: center; }
+        }
+        @media (max-width: 400px) {
+            .card { padding: 1rem; }
+            .field-group input, .field-group select, .field-group textarea { padding: 0.6rem 0.9rem; font-size: 0.85rem; }
+            .loading-logo { width: 100px; height: 100px; }
+            .loading-logo .logo-image { width: 45px; }
+        }
 
-    .header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-bottom: 1.5rem;
-        margin-bottom: 2rem;
-        border-bottom: 1px solid #e2e8f0;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-    .header-left {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-    .header-icon {
-        width: 52px;
-        height: 52px;
-        background: linear-gradient(135deg, #1e3a8a, #2563eb);
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.6rem;
-        color: white;
-        box-shadow: 0 8px 24px rgba(26, 115, 232, 0.3);
-    }
-    .header h1 {
-        font-size: 1.6rem;
-        font-weight: 700;
-        color: #1e3a8a;
-        letter-spacing: -0.5px;
-    }
-    .header h1 small {
-        display: block;
-        font-size: 0.7rem;
-        font-weight: 400;
-        color: #64748b;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        margin-top: 2px;
-    }
-    .header-badge {
-        background: rgba(0, 200, 150, 0.15);
-        border: 1px solid rgba(0, 200, 150, 0.2);
-        padding: 0.4rem 1rem;
-        border-radius: 40px;
-        color: #00c896;
-        font-size: 0.7rem;
-        font-weight: 500;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
+        /* ===== MODAL STYLES ===== */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 99999; justify-content: center; align-items: center; padding: 2rem; animation: fadeIn 0.3s ease; }
+        .modal-overlay.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal-box { background: white; border-radius: 24px; max-width: 1200px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; gap: 1rem; }
+        .modal-header h2 { font-size: 1.3rem; font-weight: 700; color: #1e3a8a; display: flex; align-items: center; gap: 10px; }
+        .modal-header h2 i { color: #2563eb; }
+        .modal-header .close-btn { background: #f1f5f9; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; color: #475569; }
+        .modal-header .close-btn:hover { background: #fee2e2; color: #dc2626; }
+        .modal-search { padding: 1rem 2rem; border-bottom: 1px solid #e2e8f0; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; background: #f8fafc; }
+        .modal-search input { flex: 1; min-width: 200px; padding: 0.6rem 1rem; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 0.9rem; outline: none; transition: all 0.3s ease; }
+        .modal-search input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+        .modal-search .search-info { font-size: 0.8rem; color: #64748b; white-space: nowrap; }
+        .modal-search .search-info span { font-weight: 700; color: #1e3a8a; }
+        .modal-body { padding: 1.5rem 2rem; overflow-y: auto; flex: 1; }
+        .modal-body table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .modal-body table th { background: #f1f5f9; color: #1e3a8a; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 0.8rem 0.8rem; text-align: left; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 10; }
+        .modal-body table td { padding: 0.7rem 0.8rem; border-bottom: 1px solid #f1f5f9; color: #334155; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .modal-body table tr:hover td { background: #f8fafc; }
+        .modal-body table .no-records td { text-align: center; padding: 3rem 0; color: #94a3b8; font-size: 1rem; }
+        .modal-footer { padding: 1rem 2rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: #f8fafc; border-radius: 0 0 24px 24px; }
+        .modal-footer .record-count { font-size: 0.85rem; color: #475569; }
+        .modal-footer .record-count span { font-weight: 700; color: #1e3a8a; }
+        .modal-footer .btn-close-modal { background: #2563eb; border: none; padding: 0.5rem 1.5rem; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 0.85rem; }
+        .modal-footer .btn-close-modal:hover { background: #1d4ed8; }
+        @media (max-width: 768px) {
+            .modal-box { max-height: 95vh; }
+            .modal-header { padding: 1rem; }
+            .modal-search { padding: 0.8rem 1rem; flex-direction: column; }
+            .modal-search input { width: 100%; min-width: unset; }
+            .modal-body { padding: 1rem; }
+            .modal-body table { font-size: 0.7rem; }
+            .modal-body table th, .modal-body table td { padding: 0.4rem 0.4rem; }
+            .modal-footer { padding: 0.8rem 1rem; flex-direction: column; text-align: center; }
+            .modal-overlay { padding: 1rem; }
+        }
 
-    /* ===== TOGGLE BUTTONS ===== */
-    .toggle-container {
-        display: flex;
-        gap: 0;
-        margin-bottom: 2rem;
-        border-radius: 16px;
-        overflow: hidden;
-        border: 2px solid #e2e8f0;
-        background: #f8fafc;
-    }
-    .toggle-btn {
-        flex: 1;
-        padding: 0.8rem 1.5rem;
-        border: none;
-        background: transparent;
-        font-weight: 700;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        color: #64748b;
-        position: relative;
-    }
-    .toggle-btn i {
-        margin-right: 8px;
-    }
-    .toggle-btn.active {
-        background: #1e3a8a;
-        color: white;
-        box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
-    }
-    .toggle-btn:not(.active):hover {
-        background: #e2e8f0;
-        color: #1e3a8a;
-    }
-    .toggle-btn:first-child {
-        border-radius: 14px 0 0 14px;
-    }
-    .toggle-btn:last-child {
-        border-radius: 0 14px 14px 0;
-    }
-
-    /* ===== FORM STYLES ===== */
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.2rem 1.8rem;
-    }
-    .full-width {
-        grid-column: 1 / -1;
-    }
-    .field-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.4rem;
-    }
-    .field-group label {
-        font-weight: 700;
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
-        color: #334155;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .field-group label i {
-        color: #2563eb;
-        font-size: 0.75rem;
-        width: 16px;
-    }
-    .field-group label .required {
-        color: #dc2626;
-        font-size: 0.6rem;
-    }
-    .field-group input:read-only {
-        background: #f1f5f9;
-        cursor: not-allowed;
-        color: #475569;
-    }
-    .field-group input,
-    .field-group select,
-    .field-group textarea {
-        background: #ffffff;
-        border: 1.5px solid #cbd5e1;
-        border-radius: 16px;
-        padding: 0.75rem 1.1rem;
-        font-size: 0.9rem;
-        transition: all 0.25s ease;
-        outline: none;
-        width: 100%;
-        color: #0f172a;
-        font-weight: 400;
-        font-family: "Inter", "Segoe UI", Roboto, sans-serif;
-    }
-    .field-group input:focus,
-    .field-group select:focus,
-    .field-group textarea:focus {
-        border-color: #2563eb;
-        background: #ffffff;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-    }
-    .field-group select {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23475569' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 1rem center;
-        cursor: pointer;
-        color: #0f172a;
-    }
-    .field-group select option {
-        background: #ffffff;
-        color: #0f172a;
-        white-space: normal;
-        word-wrap: break-word;
-        padding: 0.5rem 0.8rem;
-    }
-    .field-group select option[value=""] {
-        white-space: nowrap;
-    }
-    .field-group textarea {
-        resize: vertical;
-        min-height: 60px;
-    }
-    .field-group select option {
-        white-space: normal !important;
-        word-wrap: break-word !important;
-        padding: 6px 12px !important;
-        line-height: 1.4 !important;
-        min-height: 30px !important;
-        height: auto !important;
-    }
-    .field-group select {
-        min-height: 50px;
-    }
-
-    /* ===== PERSONAL IN-CHARGE STYLES ===== */
-    .pic-container {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        flex-wrap: wrap;
-    }
-    .pic-container select {
-        flex: 1;
-        min-width: 200px;
-    }
-    .pic-btn {
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 0.75rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        font-family: "Inter", "Segoe UI", Roboto, sans-serif;
-        white-space: nowrap;
-    }
-    .pic-btn-add {
-        background: #10b981;
-        color: white;
-    }
-    .pic-btn-add:hover {
-        background: #059669;
-        transform: translateY(-1px);
-    }
-    .pic-btn-delete {
-        background: #ef4444;
-        color: white;
-    }
-    .pic-btn-delete:hover {
-        background: #dc2626;
-        transform: translateY(-1px);
-    }
-    .pic-btn i {
-        font-size: 0.7rem;
-    }
-
-    /* ===== FORM TYPE VISIBILITY ===== */
-    .form-type {
-        display: none;
-    }
-    .form-type.active {
-        display: block;
-    }
-
-    /* ===== BUTTONS ===== */
-    .btn-submit {
-        background: linear-gradient(135deg, #2563eb, #1e3a8a);
-        border: none;
-        padding: 1rem 2rem;
-        border-radius: 60px;
-        font-weight: 700;
-        font-size: 1rem;
-        color: white;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-        margin-top: 1.2rem;
-        letter-spacing: 0.5px;
-        box-shadow: 0 4px 6px rgba(37, 99, 235, 0.25);
-        position: relative;
-        overflow: hidden;
-        font-family: "Inter", "Segoe UI", Roboto, sans-serif;
-    }
-    .btn-submit::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-        transition: left 0.6s ease;
-    }
-    .btn-submit:hover::before {
-        left: 100%;
-    }
-    .btn-submit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 15px rgba(37, 99, 235, 0.35);
-    }
-    .btn-submit:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none !important;
-    }
-    .btn-test {
-        background: #f1f5f9;
-        border: 1px solid #e2e8f0;
-        padding: 0.5rem 1rem;
-        border-radius: 40px;
-        color: #475569;
-        cursor: pointer;
-        font-size: 0.75rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        flex: 1;
-        font-family: "Inter", "Segoe UI", Roboto, sans-serif;
-    }
-    .btn-test:hover {
-        background: #e2e8f0;
-        transform: translateY(-1px);
-    }
-    .btn-test i {
-        margin-right: 4px;
-    }
-    .btn-group {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-        flex-wrap: wrap;
-    }
-    .btn-view-all {
-        background: #1e3a8a;
-        border: 1px solid #1e3a8a;
-        color: white;
-    }
-    .btn-view-all:hover {
-        background: #2563eb;
-        border-color: #2563eb;
-    }
-    .btn-chart {
-        background: #059669;
-        border: 1px solid #059669;
-        color: white;
-    }
-    .btn-chart:hover {
-        background: #047857;
-        border-color: #047857;
-    }
-    .btn-sheet {
-        background: #0f9d58;
-        border: 1px solid #0f9d58;
-        color: white;
-    }
-    .btn-sheet:hover {
-        background: #0b7e48;
-        border-color: #0b7e48;
-    }
-
-    .status-message {
-        margin-top: 1.2rem;
-        padding: 0.8rem 1.2rem;
-        border-radius: 16px;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        color: #475569;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        transition: all 0.3s ease;
-        font-size: 0.85rem;
-        min-height: 52px;
-    }
-    .status-message i {
-        font-size: 1rem;
-        color: #2563eb;
-        flex-shrink: 0;
-    }
-    .status-message.success {
-        background: #f0fdf4;
-        border-color: #86efac;
-        color: #166534;
-    }
-    .status-message.success i {
-        color: #10b981;
-    }
-    .status-message.error {
-        background: #fef2f2;
-        border-color: #fca5a5;
-        color: #991b1b;
-    }
-    .status-message.error i {
-        color: #dc2626;
-    }
-    .footer-note {
-        margin-top: 1.5rem;
-        font-size: 0.65rem;
-        color: #94a3b8;
-        text-align: center;
-        border-top: 1px solid #e2e8f0;
-        padding-top: 1.2rem;
-        letter-spacing: 0.5px;
-    }
-    .spinner {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border: 2px solid rgba(255, 255, 255, 0.15);
-        border-top: 2px solid white;
-        border-radius: 50%;
-        animation: spin 0.7s linear infinite;
-    }
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-
-    .others-text-container {
-        display: none;
-        margin-top: 0.5rem;
-    }
-    .others-text-container.active {
-        display: block;
-    }
-    .others-text-container input {
-        background: #ffffff;
-        border: 1.5px solid #cbd5e1;
-        border-radius: 16px;
-        padding: 0.75rem 1.1rem;
-        font-size: 0.9rem;
-        transition: all 0.25s ease;
-        outline: none;
-        width: 100%;
-        color: #0f172a;
-        font-weight: 400;
-        font-family: "Inter", "Segoe UI", Roboto, sans-serif;
-    }
-    .others-text-container input:focus {
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-    }
-
-    @media (max-width: 700px) {
-        .card {
-            padding: 1.5rem;
-            border-radius: 2rem;
-        }
-        .form-grid {
-            grid-template-columns: 1fr;
-            gap: 0.8rem;
-        }
-        .full-width {
-            grid-column: 1;
-        }
-        .header h1 {
-            font-size: 1.2rem;
-        }
-        .header-icon {
-            width: 42px;
-            height: 42px;
-            font-size: 1.2rem;
-        }
-        .header-badge {
-            display: none;
-        }
-        .loading-logo {
-            width: 140px;
-            height: 140px;
-        }
-        .loading-logo .logo-image {
-            width: 60px;
-        }
-        .btn-group {
-            flex-direction: column;
-        }
-        .toggle-btn {
-            font-size: 0.75rem;
-            padding: 0.6rem 1rem;
-        }
-        .pic-container {
-            flex-direction: column;
-        }
-        .pic-container select {
-            width: 100%;
-        }
-        .pic-btn {
-            width: 100%;
-            justify-content: center;
-        }
-    }
-    @media (max-width: 400px) {
-        .card {
-            padding: 1rem;
-        }
-        .field-group input,
-        .field-group select,
-        .field-group textarea {
-            padding: 0.6rem 0.9rem;
-            font-size: 0.85rem;
-        }
-        .loading-logo {
-            width: 100px;
-            height: 100px;
-        }
-        .loading-logo .logo-image {
-            width: 45px;
-        }
-    }
-
-    /* ===== MODAL STYLES ===== */
-    .modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(4px);
-        z-index: 99999;
-        justify-content: center;
-        align-items: center;
-        padding: 2rem;
-        animation: fadeIn 0.3s ease;
-    }
-    .modal-overlay.active {
-        display: flex;
-    }
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
-    .modal-box {
-        background: white;
-        border-radius: 24px;
-        max-width: 1200px;
-        width: 100%;
-        max-height: 90vh;
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        animation: slideUp 0.3s ease;
-    }
-    @keyframes slideUp {
-        from {
-            transform: translateY(30px);
-            opacity: 0;
-        }
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1.5rem 2rem;
-        border-bottom: 1px solid #e2e8f0;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-    .modal-header h2 {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #1e3a8a;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .modal-header h2 i {
-        color: #2563eb;
-    }
-    .modal-header .close-btn {
-        background: #f1f5f9;
-        border: none;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        font-size: 1.2rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #475569;
-    }
-    .modal-header .close-btn:hover {
-        background: #fee2e2;
-        color: #dc2626;
-    }
-    .modal-search {
-        padding: 1rem 2rem;
-        border-bottom: 1px solid #e2e8f0;
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        align-items: center;
-        background: #f8fafc;
-    }
-    .modal-search input {
-        flex: 1;
-        min-width: 200px;
-        padding: 0.6rem 1rem;
-        border: 1.5px solid #cbd5e1;
-        border-radius: 12px;
-        font-size: 0.9rem;
-        outline: none;
-        transition: all 0.3s ease;
-    }
-    .modal-search input:focus {
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-    }
-    .modal-search .search-info {
-        font-size: 0.8rem;
-        color: #64748b;
-        white-space: nowrap;
-    }
-    .modal-search .search-info span {
-        font-weight: 700;
-        color: #1e3a8a;
-    }
-    .modal-body {
-        padding: 1.5rem 2rem;
-        overflow-y: auto;
-        flex: 1;
-    }
-    .modal-body table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.85rem;
-    }
-    .modal-body table th {
-        background: #f1f5f9;
-        color: #1e3a8a;
-        font-weight: 700;
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        padding: 0.8rem 0.8rem;
-        text-align: left;
-        border-bottom: 2px solid #e2e8f0;
-        position: sticky;
-        top: 0;
-        z-index: 10;
-    }
-    .modal-body table td {
-        padding: 0.7rem 0.8rem;
-        border-bottom: 1px solid #f1f5f9;
-        color: #334155;
-        max-width: 200px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    .modal-body table tr:hover td {
-        background: #f8fafc;
-    }
-    .modal-body table .no-records td {
-        text-align: center;
-        padding: 3rem 0;
-        color: #94a3b8;
-        font-size: 1rem;
-    }
-    .modal-footer {
-        padding: 1rem 2rem;
-        border-top: 1px solid #e2e8f0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
-        background: #f8fafc;
-        border-radius: 0 0 24px 24px;
-    }
-    .modal-footer .record-count {
-        font-size: 0.85rem;
-        color: #475569;
-    }
-    .modal-footer .record-count span {
-        font-weight: 700;
-        color: #1e3a8a;
-    }
-    .modal-footer .btn-close-modal {
-        background: #2563eb;
-        border: none;
-        padding: 0.5rem 1.5rem;
-        border-radius: 40px;
-        color: white;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 0.85rem;
-    }
-    .modal-footer .btn-close-modal:hover {
-        background: #1d4ed8;
-    }
-    @media (max-width: 768px) {
-        .modal-box {
-            max-height: 95vh;
-        }
-        .modal-header {
-            padding: 1rem;
-        }
-        .modal-search {
+        /* ===== CHART STYLES - ORGANIZED ===== */
+        .chart-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.2rem;
             padding: 0.8rem 1rem;
-            flex-direction: column;
+            background: #f8fafc;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            align-items: center;
+            margin-bottom: 1rem;
         }
-        .modal-search input {
-            width: 100%;
-            min-width: unset;
+        .chart-filters .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
         }
-        .modal-body {
-            padding: 1rem;
-        }
-        .modal-body table {
+        .chart-filters label {
+            font-weight: 600;
             font-size: 0.7rem;
+            color: #334155;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
         }
-        .modal-body table th,
-        .modal-body table td {
-            padding: 0.4rem 0.4rem;
+        .chart-filters select,
+        .chart-filters input {
+            padding: 0.4rem 0.8rem;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            outline: none;
+            background: white;
+            transition: all 0.3s ease;
+            min-width: 120px;
         }
-        .modal-footer {
-            padding: 0.8rem 1rem;
-            flex-direction: column;
-            text-align: center;
+        .chart-filters select:focus,
+        .chart-filters input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
         }
-        .modal-overlay {
-            padding: 1rem;
+        .chart-filters .filter-btn {
+            background: #2563eb;
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.75rem;
+            white-space: nowrap;
         }
-    }
+        .chart-filters .filter-btn:hover { background: #1d4ed8; }
+        .chart-filters .filter-btn.reset-btn { background: #64748b; }
+        .chart-filters .filter-btn.reset-btn:hover { background: #475569; }
+        .chart-filters .filter-divider {
+            width: 1px;
+            height: 30px;
+            background: #e2e8f0;
+            margin: 0 0.2rem;
+        }
 
-    /* ===== CHART STYLES ===== */
-    .chart-filters {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        align-items: center;
-        padding: 0.5rem 0 1rem 0;
-    }
-    .chart-filters label {
-        font-weight: 600;
-        font-size: 0.8rem;
-        color: #334155;
-    }
-    .chart-filters select,
-    .chart-filters input {
-        padding: 0.5rem 1rem;
-        border: 1.5px solid #cbd5e1;
-        border-radius: 12px;
-        font-size: 0.85rem;
-        outline: none;
-        background: white;
-        transition: all 0.3s ease;
-    }
-    .chart-filters select:focus,
-    .chart-filters input:focus {
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-    }
-    .chart-filters .filter-btn {
-        background: #2563eb;
-        border: none;
-        padding: 0.5rem 1.5rem;
-        border-radius: 40px;
-        color: white;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 0.85rem;
-    }
-    .chart-filters .filter-btn:hover {
-        background: #1d4ed8;
-    }
-    .chart-filters .filter-btn.reset-btn {
-        background: #64748b;
-    }
-    .chart-filters .filter-btn.reset-btn:hover {
-        background: #475569;
-    }
-    .chart-container {
-        position: relative;
-        height: 400px;
-        margin-top: 1rem;
-    }
-    .chart-container canvas {
-        width: 100% !important;
-        height: 100% !important;
-    }
-    .chart-summary {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: 0.8rem;
-        margin-top: 1.5rem;
-        padding: 1rem;
-        background: #f8fafc;
-        border-radius: 16px;
-    }
-    .chart-summary .stat-item {
-        text-align: center;
-    }
-    .chart-summary .stat-item .stat-value {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #1e3a8a;
-    }
-    .chart-summary .stat-item .stat-label {
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        color: #64748b;
-        letter-spacing: 0.5px;
-    }
-    .chart-loading {
-        text-align: center;
-        padding: 2rem;
-        color: #94a3b8;
-    }
-    .chart-loading i {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-    }
-    .chart-type-selector {
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
-    }
-    .chart-type-selector button {
-        padding: 0.4rem 1rem;
-        border: 2px solid #cbd5e1;
-        border-radius: 30px;
-        background: white;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 0.75rem;
-        transition: all 0.3s ease;
-        color: #475569;
-    }
-    .chart-type-selector button.active {
-        border-color: #2563eb;
-        background: #2563eb;
-        color: white;
-    }
-    .chart-type-selector button:hover {
-        border-color: #2563eb;
-    }
+        .chart-type-selector {
+            display: flex;
+            gap: 0.4rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .chart-type-selector label { font-weight: 600; font-size: 0.7rem; color: #334155; text-transform: uppercase; letter-spacing: 0.3px; }
+        .chart-type-selector button {
+            padding: 0.3rem 0.9rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.7rem;
+            transition: all 0.3s ease;
+            color: #475569;
+        }
+        .chart-type-selector button.active {
+            border-color: #2563eb;
+            background: #2563eb;
+            color: white;
+        }
+        .chart-type-selector button:hover { border-color: #2563eb; }
 
-    /* ===== ADD PERSON MODAL ===== */
-    .add-person-modal .modal-box {
-        max-width: 500px;
-    }
-    .add-person-modal .modal-body {
-        padding: 2rem;
-    }
-    .add-person-modal .field-group {
-        margin-bottom: 1rem;
-    }
-    .add-person-modal .btn-add-person {
-        background: #10b981;
-        border: none;
-        padding: 0.8rem 2rem;
-        border-radius: 40px;
-        color: white;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-        font-size: 1rem;
-        font-family: "Inter", "Segoe UI", Roboto, sans-serif;
-    }
-    .add-person-modal .btn-add-person:hover {
-        background: #059669;
-    }
-    .add-person-modal .btn-add-person:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-    .add-person-modal .error-msg {
-        color: #dc2626;
-        font-size: 0.8rem;
-        margin-top: 0.3rem;
-        display: none;
-    }
-    .add-person-modal .error-msg.show {
-        display: block;
-    }
-	/* Ensures the logo doesn't blow up in size */
-.logo-image {
-    height: 50px;        /* Adjust this height to match your header size */
-    width: auto;
-    display: block;
-}
+        .chart-container { position: relative; height: 400px; margin-top: 0.5rem; }
+        .chart-container canvas { width: 100% !important; height: 100% !important; }
+        .chart-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.6rem; margin-top: 1rem; padding: 0.8rem 1rem; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; }
+        .chart-summary .stat-item { text-align: center; }
+        .chart-summary .stat-item .stat-value { font-size: 1.3rem; font-weight: 700; color: #1e3a8a; }
+        .chart-summary .stat-item .stat-label { font-size: 0.6rem; text-transform: uppercase; color: #64748b; letter-spacing: 0.3px; }
+        .chart-loading { text-align: center; padding: 2rem; color: #94a3b8; }
+        .chart-loading i { font-size: 2rem; margin-bottom: 1rem; }
 
-/* Optional: If using Option 2, centers the icon and logo relative to each other */
-.header-icon, .header-logo {
-    display: flex;
-    align-items: center;
-}
-</style>
+        .add-person-modal .modal-box { max-width: 500px; }
+        .add-person-modal .modal-body { padding: 2rem; }
+        .add-person-modal .field-group { margin-bottom: 1rem; }
+        .add-person-modal .btn-add-person { background: #10b981; border: none; padding: 0.8rem 2rem; border-radius: 40px; color: white; font-weight: 700; cursor: pointer; transition: all 0.3s ease; width: 100%; font-size: 1rem; font-family: "Inter", "Segoe UI", Roboto, sans-serif; }
+        .add-person-modal .btn-add-person:hover { background: #059669; }
+        .add-person-modal .btn-add-person:disabled { opacity: 0.6; cursor: not-allowed; }
+        .add-person-modal .error-msg { color: #dc2626; font-size: 0.8rem; margin-top: 0.3rem; display: none; }
+        .add-person-modal .error-msg.show { display: block; }
 
+        @media (max-width: 768px) {
+            .chart-filters { flex-direction: column; align-items: stretch; }
+            .chart-filters .filter-group { flex-wrap: wrap; }
+            .chart-filters select, .chart-filters input { min-width: 100%; }
+            .chart-filters .filter-divider { display: none; }
+            .chart-type-selector { flex-wrap: wrap; }
+            .chart-summary { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
 </head>
 <body>
 
 <div id="loadingOverlay">
     <div class="loading-logo">
-         <img src="DHSUD_LOGO.png" alt="DHSUD Logo" class="logo-image" onerror="this.style.display='none'">
+        <img src="DHSUD_LOGO.png" alt="DHSUD Logo" class="logo-image" onerror="this.style.display='none'">
         <div class="ring-container">
             <svg viewBox="0 0 200 200">
                 <circle class="ring" cx="100" cy="100" r="80" />
@@ -1141,16 +307,16 @@
 <div class="card" id="mainCard">
     <div class="header">
         <div class="header-left">
-    <div class="header-logo">
-        <img src="DHSUD_LOGO.png" alt="DHSUD Logo" class="logo-image" onerror="this.style.display='none'">
-    </div>
-    <div>
-        <h1>
-            ELUPDD Technical Assistance
-            <small>Technical Assistance Management Information System</small>
-        </h1>
-    </div>
-</div>
+            <div class="header-logo">
+                <img src="DHSUD_LOGO.png" alt="DHSUD Logo" class="logo-image" onerror="this.style.display='none'">
+            </div>
+            <div>
+                <h1>
+                    ELUPDD Technical Assistance
+                    <small>Technical Assistance Management Information System</small>
+                </h1>
+            </div>
+        </div>
         <div class="header-badge">
             <i class="fas fa-circle" style="font-size: 0.4rem; color: #00c896;"></i>
             <span>Live</span>
@@ -1175,14 +341,12 @@
                     <label><i class="fas fa-hashtag"></i> PSGC <span class="required">*</span></label>
                     <input type="text" id="clup_psgc" placeholder="Auto-fills when city selected" readonly required>
                 </div>
-
                 <div class="field-group">
                     <label><i class="fas fa-map-pin"></i> Region <span class="required">*</span></label>
                     <select id="clup_region" required>
-                        <option value="Region_VI">Region VI - Western Visayas</option>
+                        <option value="Region 6">Region 6 - Western Visayas</option>
                     </select>
                 </div>
-
                 <div class="field-group">
                     <label><i class="fas fa-landmark"></i> Province <span class="required">*</span></label>
                     <select id="clup_province" required>
@@ -1195,19 +359,16 @@
                         <option value="Negros Occidental">Negros Occidental</option>
                     </select>
                 </div>
-
                 <div class="field-group">
                     <label><i class="fas fa-city"></i> City/Municipality <span class="required">*</span></label>
                     <select id="clup_cityMun" required>
                         <option value="">Select City/Municipality...</option>
                     </select>
                 </div>
-
                 <div class="field-group full-width">
                     <label><i class="fas fa-quote-right"></i> Query / TA Details <span class="required">*</span></label>
                     <textarea id="clup_queryDetails" placeholder="Describe the request or technical assistance..." rows="2" required></textarea>
                 </div>
-
                 <div class="field-group full-width">
                     <label><i class="fas fa-headset"></i> Type of Assistance Provided <span class="required">*</span></label>
                     <select id="clup_assistanceType" required>
@@ -1224,7 +385,6 @@
                         <input type="text" id="clup_othersText" placeholder="Please specify other type of assistance...">
                     </div>
                 </div>
-
                 <div class="field-group">
                     <label><i class="fas fa-tag"></i> TA Category <span class="required">*</span></label>
                     <select id="clup_taCategory" required>
@@ -1239,7 +399,6 @@
                         <option value="Urban Development">Urban Development</option>
                     </select>
                 </div>
-
                 <div class="field-group">
                     <label><i class="fas fa-clock"></i> Planned / Requested <span class="required">*</span></label>
                     <select id="clup_plannedRequested" required>
@@ -1248,12 +407,10 @@
                         <option value="Requested">Requested</option>
                     </select>
                 </div>
-
                 <div class="field-group">
                     <label><i class="fas fa-calendar-alt"></i> Date Conducted <span class="required">*</span></label>
                     <input type="date" id="clup_dateConducted" required>
                 </div>
-
                 <div class="field-group">
                     <label><i class="fas fa-calendar-check"></i> Reporting Month <span class="required">*</span></label>
                     <select id="clup_reportingMonth" required>
@@ -1272,18 +429,14 @@
                         <option value="December">December</option>
                     </select>
                 </div>
-
                 <div class="field-group full-width">
                     <label><i class="fas fa-pencil-alt"></i> Remarks</label>
                     <input type="text" id="clup_remarks" placeholder="N/A or additional notes">
                 </div>
-
                 <div class="field-group full-width">
                     <label><i class="fas fa-link"></i> Link to MOV</label>
                     <input type="url" id="clup_linkMov" placeholder="https://drive.google.com/...">
                 </div>
-
-                <!-- ===== PERSONAL IN-CHARGE ===== -->
                 <div class="field-group full-width">
                     <label><i class="fas fa-user"></i> Personnel In-Charge <span class="required">*</span></label>
                     <div class="pic-container">
@@ -1299,7 +452,6 @@
                     </div>
                 </div>
             </div>
-
             <button type="submit" class="btn-submit" id="clup_submitBtn">
                 <i class="fas fa-cloud-upload-alt"></i>
                 <span>Save to Google Sheet (CLUP)</span>
@@ -1314,10 +466,9 @@
                 <div class="field-group full-width">
                     <label><i class="fas fa-map-pin"></i> Region <span class="required">*</span></label>
                     <select id="pdpfp_region" required>
-                        <option value="Region_VI">Region VI - Western Visayas</option>
+                        <option value="Region 6">Region 6 - Western Visayas</option>
                     </select>
                 </div>
-
                 <div class="field-group full-width">
                     <label><i class="fas fa-landmark"></i> Province <span class="required">*</span></label>
                     <select id="pdpfp_province" required>
@@ -1330,12 +481,10 @@
                         <option value="Negros Occidental">Negros Occidental</option>
                     </select>
                 </div>
-
                 <div class="field-group full-width">
                     <label><i class="fas fa-quote-right"></i> Query / TA Details <span class="required">*</span></label>
                     <textarea id="pdpfp_queryDetails" placeholder="Describe the request or technical assistance..." rows="2" required></textarea>
                 </div>
-
                 <div class="field-group full-width">
                     <label><i class="fas fa-headset"></i> Type of Assistance Provided <span class="required">*</span></label>
                     <select id="pdpfp_assistanceType" required>
@@ -1352,7 +501,6 @@
                         <input type="text" id="pdpfp_othersText" placeholder="Please specify other type of assistance...">
                     </div>
                 </div>
-
                 <div class="field-group full-width">
                     <label><i class="fas fa-tag"></i> TA Category <span class="required">*</span></label>
                     <select id="pdpfp_taCategory" required>
@@ -1366,7 +514,6 @@
                         <option value="Urban Development">Urban Development</option>
                     </select>
                 </div>
-
                 <div class="field-group">
                     <label><i class="fas fa-clock"></i> Planned / Requested <span class="required">*</span></label>
                     <select id="pdpfp_plannedRequested" required>
@@ -1375,12 +522,10 @@
                         <option value="Requested">Requested</option>
                     </select>
                 </div>
-
                 <div class="field-group">
                     <label><i class="fas fa-calendar-alt"></i> Date Conducted <span class="required">*</span></label>
                     <input type="date" id="pdpfp_dateConducted" required>
                 </div>
-
                 <div class="field-group">
                     <label><i class="fas fa-calendar-check"></i> Reporting Month <span class="required">*</span></label>
                     <select id="pdpfp_reportingMonth" required>
@@ -1399,18 +544,14 @@
                         <option value="December">December</option>
                     </select>
                 </div>
-
                 <div class="field-group full-width">
                     <label><i class="fas fa-pencil-alt"></i> Remarks</label>
                     <input type="text" id="pdpfp_remarks" placeholder="N/A or additional notes">
                 </div>
-
                 <div class="field-group full-width">
                     <label><i class="fas fa-link"></i> Link to MOV</label>
                     <input type="url" id="pdpfp_linkMov" placeholder="https://drive.google.com/...">
                 </div>
-
-                <!-- ===== PERSONAL IN-CHARGE ===== -->
                 <div class="field-group full-width">
                     <label><i class="fas fa-user"></i> Personnel In-Charge <span class="required">*</span></label>
                     <div class="pic-container">
@@ -1426,7 +567,6 @@
                     </div>
                 </div>
             </div>
-
             <button type="submit" class="btn-submit" id="pdpfp_submitBtn">
                 <i class="fas fa-cloud-upload-alt"></i>
                 <span>Save to Google Sheet (PDPFP)</span>
@@ -1489,7 +629,9 @@
             <button class="close-btn" id="closeChartBtn"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body" id="chartModalBody">
-            <div class="chart-filters">
+
+            <!-- ===== Chart Type Selector ===== -->
+            <div class="chart-filters" style="border-bottom: none; margin-bottom: 0.5rem; background: transparent; padding: 0 0 0.5rem 0;">
                 <div class="chart-type-selector">
                     <label>Chart Type:</label>
                     <button class="active" data-chart="category">TA Category</button>
@@ -1498,52 +640,69 @@
                 </div>
             </div>
 
+            <!-- ===== FILTERS - ORGANIZED ===== -->
             <div class="chart-filters">
-                <label for="chartMonthFilter">Month:</label>
-                <select id="chartMonthFilter">
-                    <option value="all">All Months</option>
-                    <option value="January">January</option>
-                    <option value="February">February</option>
-                    <option value="March">March</option>
-                    <option value="April">April</option>
-                    <option value="May">May</option>
-                    <option value="June">June</option>
-                    <option value="July">July</option>
-                    <option value="August">August</option>
-                    <option value="September">September</option>
-                    <option value="October">October</option>
-                    <option value="November">November</option>
-                    <option value="December">December</option>
-                </select>
+                <div class="filter-group">
+                    <label for="chartMonthFilter">Month:</label>
+                    <select id="chartMonthFilter">
+                        <option value="all">All Months</option>
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July">July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
+                    </select>
+                </div>
 
-                <label for="chartYearFilter">Year:</label>
-                <input type="number" id="chartYearFilter" placeholder="e.g. 2026" style="width: 120px;">
+                <div class="filter-group">
+                    <label for="chartYearFilter">Year:</label>
+                    <input type="number" id="chartYearFilter" placeholder="e.g. 2026" style="width: 100px; min-width: 80px;">
+                </div>
 
-                <label for="chartCategoryFilter">TA Category:</label>
-                <select id="chartCategoryFilter">
-                    <option value="all">All Categories</option>
-                </select>
+                <div class="filter-group">
+                    <label for="chartCategoryFilter">TA Category:</label>
+                    <select id="chartCategoryFilter">
+                        <option value="all">All Categories</option>
+                    </select>
+                </div>
 
-                <label for="chartPlannedFilter">Planned/Requested:</label>
-                <select id="chartPlannedFilter">
-                    <option value="all">All</option>
-                    <option value="Planned">Planned</option>
-                    <option value="Requested">Requested</option>
-                </select>
+                <div class="filter-divider"></div>
 
-                <label for="chartProvinceFilter">Province:</label>
-                <select id="chartProvinceFilter">
-                    <option value="all">All Provinces</option>
-                    <option value="Aklan">Aklan</option>
-                    <option value="Antique">Antique</option>
-                    <option value="Capiz">Capiz</option>
-                    <option value="Guimaras">Guimaras</option>
-                    <option value="Iloilo">Iloilo</option>
-                    <option value="Negros Occidental">Negros Occidental</option>
-                </select>
+                <div class="filter-group">
+                    <label for="chartPlannedFilter">Planned/Requested:</label>
+                    <select id="chartPlannedFilter">
+                        <option value="all">All</option>
+                        <option value="Planned">Planned</option>
+                        <option value="Requested">Requested</option>
+                    </select>
+                </div>
 
-                <button class="filter-btn" id="applyChartFilter"><i class="fas fa-filter"></i> Apply Filter</button>
-                <button class="filter-btn reset-btn" id="resetChartFilter"><i class="fas fa-undo"></i> Reset</button>
+                <div class="filter-group">
+                    <label for="chartProvinceFilter">Province:</label>
+                    <select id="chartProvinceFilter">
+                        <option value="all">All Provinces</option>
+                        <option value="Aklan">Aklan</option>
+                        <option value="Antique">Antique</option>
+                        <option value="Capiz">Capiz</option>
+                        <option value="Guimaras">Guimaras</option>
+                        <option value="Iloilo">Iloilo</option>
+                        <option value="Negros Occidental">Negros Occidental</option>
+                    </select>
+                </div>
+
+                <div class="filter-divider"></div>
+
+                <div class="filter-group">
+                    <button class="filter-btn" id="applyChartFilter"><i class="fas fa-filter"></i> Apply</button>
+                    <button class="filter-btn reset-btn" id="resetChartFilter"><i class="fas fa-undo"></i> Reset</button>
+                </div>
             </div>
 
             <div id="chartContainer">
@@ -1615,11 +774,10 @@
     const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ikMuQVy3MBiuK6KuAEGBJ2sod-jlzLwCqsTtenORczg/edit?usp=sharing';
 
     // ============================================
-    // PERSONAL IN-CHARGE DATA (Stored in Google Sheet)
+    // PERSONNEL IN-CHARGE DATA (Stored in Google Sheet)
     // ============================================
     let picNames = [];
 
-    // ===== LOAD PIC NAMES FROM GOOGLE SHEET =====
     async function loadPICNamesFromSheet() {
         try {
             const response = await fetch(WEB_APP_URL + '?action=getPIC', { method: 'GET' });
@@ -1642,17 +800,13 @@
         }
     }
 
-    // ===== SAVE PIC NAMES TO GOOGLE SHEET =====
     async function savePICNamesToSheet(names) {
         try {
             await fetch(WEB_APP_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    action: 'savePIC', 
-                    names: names 
-                })
+                body: JSON.stringify({ action: 'savePIC', names: names })
             });
             return true;
         } catch (error) {
@@ -1661,9 +815,6 @@
         }
     }
 
-    // ============================================
-    // PERSONAL IN-CHARGE FUNCTIONS
-    // ============================================
     function populatePicDropdowns() {
         const selects = ['clup_pic', 'pdpfp_pic'];
         selects.forEach(id => {
@@ -1683,9 +834,7 @@
         });
     }
 
-    function refreshPicData() {
-        loadPICNamesFromSheet();
-    }
+    function refreshPicData() { loadPICNamesFromSheet(); }
 
     // ============================================
     // ADD PERSON MODAL
@@ -1703,9 +852,7 @@
         setTimeout(() => newPersonName.focus(), 100);
     }
 
-    function closeAddPersonModal() {
-        addPersonModal.classList.remove('active');
-    }
+    function closeAddPersonModal() { addPersonModal.classList.remove('active'); }
 
     document.getElementById('closeAddPersonBtn').addEventListener('click', closeAddPersonModal);
     addPersonModal.addEventListener('click', function(e) {
@@ -1717,27 +864,18 @@
 
     document.getElementById('confirmAddPerson').addEventListener('click', async function() {
         const name = newPersonName.value.trim();
-        if (!name) {
-            personError.classList.add('show');
-            return;
-        }
+        if (!name) { personError.classList.add('show'); return; }
         personError.classList.remove('show');
-
         if (picNames.includes(name)) {
             personError.textContent = 'This name already exists.';
             personError.classList.add('show');
             return;
         }
-
         picNames.push(name);
         populatePicDropdowns();
         await savePICNamesToSheet(picNames);
-
         const targetSelect = document.getElementById(currentAddTarget + '_pic');
-        if (targetSelect) {
-            targetSelect.value = name;
-        }
-
+        if (targetSelect) { targetSelect.value = name; }
         setStatus('✅ "' + name + '" added to Personnel In-Charge list.', 'success');
         closeAddPersonModal();
     });
@@ -1759,11 +897,7 @@
             setStatus('⚠️ Please select a person to delete.', 'error');
             return;
         }
-
-        if (!confirm('Are you sure you want to remove "' + selectedName + '" from the list?')) {
-            return;
-        }
-
+        if (!confirm('Are you sure you want to remove "' + selectedName + '" from the list?')) { return; }
         const index = picNames.indexOf(selectedName);
         if (index > -1) {
             picNames.splice(index, 1);
@@ -1903,23 +1037,16 @@
     // ============================================
     function switchForm(type) {
         currentFormType = type;
-        
         document.querySelectorAll('.toggle-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.type === type);
         });
-        
         document.getElementById('formCLUP').classList.toggle('active', type === 'CLUP');
         document.getElementById('formPDPFP').classList.toggle('active', type === 'PDPFP');
-        
         setStatus('📋 ' + type + ' form selected · fill in all required fields', 'info');
     }
 
-    document.getElementById('toggleCLUP').addEventListener('click', function() {
-        switchForm('CLUP');
-    });
-    document.getElementById('togglePDPFP').addEventListener('click', function() {
-        switchForm('PDPFP');
-    });
+    document.getElementById('toggleCLUP').addEventListener('click', function() { switchForm('CLUP'); });
+    document.getElementById('togglePDPFP').addEventListener('click', function() { switchForm('PDPFP'); });
 
     // ============================================
     // DOM REFS
@@ -2007,7 +1134,7 @@
     });
 
     // ============================================
-    // GET FORM DATA
+    // GET FORM DATA - WITH REGION CONVERSION
     // ============================================
     function getFormData(type) {
         const prefix = type.toLowerCase();
@@ -2020,9 +1147,16 @@
             assistance = others ? 'Others: ' + others : '';
         }
 
+        // Get region value and convert to Region_06 format for Google Sheets
+        let regionValue = getVal('region');
+        // Convert "Region 6" to "Region_06"
+        if (regionValue === 'Region 6') {
+            regionValue = 'Region_06';
+        }
+
         let payload = {
             formType: type,
-            region: getVal('region'),
+            region: regionValue,
             province: getVal('province'),
             queryDetails: getVal('queryDetails'),
             assistanceType: assistance,
@@ -2042,7 +1176,6 @@
             payload.psgc = '';
             payload.cityMun = '';
         }
-
         return payload;
     }
 
@@ -2051,19 +1184,16 @@
     // ============================================
     function validateForm(payload, type) {
         let required = ['region', 'province', 'queryDetails', 'assistanceType', 'taCategory', 'plannedRequested', 'dateConducted', 'reportingMonth', 'personnelInCharge'];
-        
         if (type === 'CLUP') {
             required.push('psgc');
             required.push('cityMun');
         }
-        
         for (const field of required) {
             if (!payload[field]) {
                 setStatus('❌ Please fill in all required fields', 'error');
                 return false;
             }
         }
-        
         if (!payload.assistanceType || payload.assistanceType === '') {
             setStatus('❌ Please specify the other type of assistance.', 'error');
             return false;
@@ -2079,14 +1209,12 @@
         const form = document.getElementById(prefix + 'Form');
         form.reset();
         document.getElementById(prefix + '_dateConducted').value = new Date().toISOString().split('T')[0];
-        document.getElementById(prefix + '_region').value = 'Region_VI';
+        document.getElementById(prefix + '_region').value = 'Region 6';
         document.getElementById(prefix + '_province').value = '';
-        
         if (type === 'CLUP') {
             document.getElementById(prefix + '_cityMun').innerHTML = '<option value="">Select City/Municipality...</option>';
             document.getElementById(prefix + '_psgc').value = '';
         }
-        
         document.getElementById(prefix + '_othersContainer').classList.remove('active');
         document.getElementById(prefix + '_othersText').value = '';
         document.getElementById(prefix + '_taCategory').value = '';
@@ -2116,21 +1244,17 @@
     async function submitRecord(payload, type) {
         setLoading(true);
         setStatus('⏳ Saving to Google Sheet (' + type + ')...', 'info');
-
         try {
             console.log('📤 Sending payload:', payload);
-            
             await fetch(WEB_APP_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
-
             setLoading(false);
             setStatus('✅ Record SAVED to Google Sheet (' + type + ')!', 'success');
             resetForm(type);
-
         } catch (error) {
             setLoading(false);
             console.error('❌ Error:', error);
@@ -2144,9 +1268,9 @@
             const btn = document.getElementById(id);
             if (btn) {
                 btn.disabled = loading;
-                btn.innerHTML = loading ? '<span class="spinner"></span> Saving...' : 
-                    (id.includes('clup') ? '<i class="fas fa-cloud-upload-alt"></i> Save to Google Sheet (CLUP)' : 
-                                          '<i class="fas fa-cloud-upload-alt"></i> Save to Google Sheet (PDPFP)');
+                btn.innerHTML = loading ? '<span class="spinner"></span> Saving...' :
+                    (id.includes('clup') ? '<i class="fas fa-cloud-upload-alt"></i> Save to Google Sheet (CLUP)' :
+                        '<i class="fas fa-cloud-upload-alt"></i> Save to Google Sheet (PDPFP)');
             }
         });
     }
@@ -2287,11 +1411,9 @@
     function updateCategoryFilter() {
         const select = document.getElementById('chartCategoryFilter');
         select.innerHTML = '<option value="all">All Categories</option>';
-        
-        const categories = currentFormType === 'CLUP' ? 
+        const categories = currentFormType === 'CLUP' ?
             ['CDRA', 'Formulation and Updating', 'GIS', 'Implementation and Monitoring', 'Other CLUP and ZO Related Technical Assistance', 'PlanSmart for SHS', 'Review and Approval', 'Urban Development'] :
             ['CDRA & PCRD', 'Formulation and Updating', 'GIS', 'Other CLUP and ZO Related Technical Assistance', 'PlanSmart for SHS', 'Review and Approval', 'Urban Development'];
-        
         categories.forEach(cat => {
             const opt = document.createElement('option');
             opt.value = cat;
@@ -2372,7 +1494,6 @@
             let topCat = '-', topCount = 0;
             labels.forEach((cat, i) => { if (data[i] > topCount) { topCount = data[i]; topCat = cat; } });
             document.getElementById('statTopCategory').textContent = topCat + ' (' + topCount + ')';
-
             renderBarChart(container, labels, data, chartTitle, datasetLabel);
             summary.style.display = 'grid';
             return;
@@ -2499,41 +1620,23 @@
     });
 
     // ============================================
-    // VIEW ALL RECORDS
+    // VIEW BUTTONS
     // ============================================
     document.getElementById('viewAllBtn').addEventListener('click', openRecordsModal);
-
-    // ============================================
-    // VIEW CHART
-    // ============================================
     document.getElementById('chartBtn').addEventListener('click', openChartModal);
 
-    // ============================================
-    // VIEW GOOGLE SHEET
-    // ============================================
     document.getElementById('sheetBtn').addEventListener('click', function() {
         window.open(GOOGLE_SHEET_URL, '_blank');
         setStatus('📊 Opening Google Sheet in new tab...', 'info');
     });
 
     // ============================================
-    // PERSONAL IN-CHARGE BUTTON EVENTS
+    // PERSONNEL IN-CHARGE BUTTON EVENTS
     // ============================================
-    document.getElementById('clup_addPic').addEventListener('click', function() {
-        openAddPersonModal('clup');
-    });
-
-    document.getElementById('pdpfp_addPic').addEventListener('click', function() {
-        openAddPersonModal('pdpfp');
-    });
-
-    document.getElementById('clup_deletePic').addEventListener('click', function() {
-        deleteSelectedPerson('clup');
-    });
-
-    document.getElementById('pdpfp_deletePic').addEventListener('click', function() {
-        deleteSelectedPerson('pdpfp');
-    });
+    document.getElementById('clup_addPic').addEventListener('click', function() { openAddPersonModal('clup'); });
+    document.getElementById('pdpfp_addPic').addEventListener('click', function() { openAddPersonModal('pdpfp'); });
+    document.getElementById('clup_deletePic').addEventListener('click', function() { deleteSelectedPerson('clup'); });
+    document.getElementById('pdpfp_deletePic').addEventListener('click', function() { deleteSelectedPerson('pdpfp'); });
 
     // ============================================
     // INIT
@@ -2548,13 +1651,11 @@
         document.getElementById('clup_reportingMonth').value = currentMonth;
         document.getElementById('pdpfp_reportingMonth').value = currentMonth;
 
-        document.getElementById('clup_region').value = 'Region_VI';
-        document.getElementById('pdpfp_region').value = 'Region_VI';
+        document.getElementById('clup_region').value = 'Region 6';
+        document.getElementById('pdpfp_region').value = 'Region 6';
         document.getElementById('chartYearFilter').value = new Date().getFullYear();
 
-        // Load PIC names from Google Sheet
         loadPICNamesFromSheet();
-
         setStatus('📋 All set · select CLUP or PDPFP', 'info');
     });
 
