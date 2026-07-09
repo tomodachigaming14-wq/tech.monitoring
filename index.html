@@ -1146,8 +1146,8 @@
     </div>
     <div>
         <h1>
-            TECHNICAL ASSISTANCE
-            <small>Technical Monitoring System</small>
+            ELUPDD Technical Assistance
+            <small>Technical Assistance Management Information System</small>
         </h1>
     </div>
 </div>
@@ -1412,7 +1412,7 @@
 
                 <!-- ===== PERSONAL IN-CHARGE ===== -->
                 <div class="field-group full-width">
-                    <label><i class="fas fa-user"></i> Personal In-Charge <span class="required">*</span></label>
+                    <label><i class="fas fa-user"></i> Personnel In-Charge <span class="required">*</span></label>
                     <div class="pic-container">
                         <select id="pdpfp_pic" required>
                             <option value="">Select Person...</option>
@@ -1611,7 +1611,7 @@
     // ============================================
     // CONFIGURATION
     // ============================================
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxlyM_u7PPjwlvjp39GmyrztU4fDmWG2W5TSszIFlTCPvn_Z_iY7Tr6UDLdbYX31UEpNw/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz504oB9-SkqEW_5mwMzlnhRy1ZYd6kQy4k4lSeodCusjfVDiEWV__tjd88IbeuO0fuww/exec';
     const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1ikMuQVy3MBiuK6KuAEGBJ2sod-jlzLwCqsTtenORczg/edit?usp=sharing';
 
     // ============================================
@@ -1738,7 +1738,7 @@
             targetSelect.value = name;
         }
 
-        setStatus('✅ "' + name + '" added to Personal In-Charge list.', 'success');
+        setStatus('✅ "' + name + '" added to Personnel In-Charge list.', 'success');
         closeAddPersonModal();
     });
 
@@ -1769,7 +1769,7 @@
             picNames.splice(index, 1);
             populatePicDropdowns();
             await savePICNamesToSheet(picNames);
-            setStatus('🗑️ "' + selectedName + '" removed from Personal In-Charge list.', 'info');
+            setStatus('🗑️ "' + selectedName + '" removed from Personnel In-Charge list.', 'info');
         }
     }
 
@@ -2032,7 +2032,7 @@
             reportingMonth: getVal('reportingMonth'),
             remarks: getVal('remarks') || 'N/A',
             linkMov: getVal('linkMov') || '',
-            personalInCharge: getVal('pic')
+            personnelInCharge: getVal('pic')
         };
 
         if (type === 'CLUP') {
@@ -2050,7 +2050,7 @@
     // VALIDATE FORM
     // ============================================
     function validateForm(payload, type) {
-        let required = ['region', 'province', 'queryDetails', 'assistanceType', 'taCategory', 'plannedRequested', 'dateConducted', 'reportingMonth', 'personalInCharge'];
+        let required = ['region', 'province', 'queryDetails', 'assistanceType', 'taCategory', 'plannedRequested', 'dateConducted', 'reportingMonth', 'personnelInCharge'];
         
         if (type === 'CLUP') {
             required.push('psgc');
@@ -2202,7 +2202,7 @@
 
     function renderTable(records) {
         if (!records || records.length === 0) {
-            modalBody.innerHTML = `<table><thead><tr><th>#</th><th>PSGC</th><th>Region</th><th>Province</th><th>City/Municipality</th><th>Query Details</th><th>Assistance Type</th><th>TA Category</th><th>Planned/Requested</th><th>Date Conducted</th><th>Reporting Month</th><th>Personal In-Charge</th></tr></thead><tbody><tr class="no-records"><td colspan="12">📭 No records found for ${currentFormType}.</td></tr></tbody></table>`;
+            modalBody.innerHTML = `<table><thead><tr><th>#</th><th>PSGC</th><th>Region</th><th>Province</th><th>City/Municipality</th><th>Query Details</th><th>Assistance Type</th><th>TA Category</th><th>Planned/Requested</th><th>Date Conducted</th><th>Reporting Month</th><th>Personnel In-Charge</th></tr></thead><tbody><tr class="no-records"><td colspan="12">📭 No records found for ${currentFormType}.</td></tr></tbody></table>`;
             displayCount.textContent = '0';
             return;
         }
@@ -2218,7 +2218,7 @@
             { key: 'Planned / Requested', label: 'Planned/Requested' },
             { key: 'Date Conducted', label: 'Date Conducted' },
             { key: 'Reporting Month', label: 'Reporting Month' },
-            { key: 'Personal In-Charge', label: 'Personal In-Charge' }
+            { key: 'Personnel In-Charge', label: 'Personnel In-Charge' }
         ];
 
         let html = `<table><thead><tr><th>#</th>`;
