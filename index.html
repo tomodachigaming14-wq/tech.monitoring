@@ -2569,6 +2569,34 @@ function renderTable(records) {
                     html += `</select></td>`;
                 } else if (col.key === 'Date Conducted') {
                     html += `<td><input type="date" name="${fieldName}" data-key="${col.key}" value="${value}"></td>`;
+                } else if (col.key === 'TA Category') {
+                    // Dropdown for TA Category
+                    const categories = currentFormType === 'CLUP' ?
+                        ['CDRA', 'Formulation and Updating', 'GIS', 'Implementation and Monitoring', 'Other CLUP and ZO Related Technical Assistance', 'PlanSmart for SHS', 'Review and Approval', 'Urban Development'] :
+                        ['CDRA & PCRD', 'Formulation and Updating', 'GIS', 'Other CLUP and ZO Related Technical Assistance', 'PlanSmart for SHS', 'Review and Approval', 'Urban Development'];
+                    html += `<td><select name="${fieldName}" data-key="${col.key}">`;
+                    html += `<option value="">Select...</option>`;
+                    categories.forEach(cat => {
+                        html += `<option value="${cat}" ${cat === value ? 'selected' : ''}>${cat}</option>`;
+                    });
+                    html += `</select></td>`;
+                } else if (col.key === 'Type of Assistance Provided') {
+                    // Dropdown for Assistance Type
+                    const assistanceTypes = [
+                        'Assistance through on-field mentoring and coaching',
+                        'Assistance to walk-in/by-appointment consultations',
+                        'Assistance through online platform, telephone, and letter queries',
+                        'Assistance by serving as a resource speaker (i.e., tapped as or requested as an RP) to other capability development activities conducted by other bodies (i.e., other DHSUD offices, external bodies such as NGAs, NGOs, Academe, etc.)',
+                        'Assistance through the provision of orientations/briefings',
+                        'Assistance through provision of inputs and recommendations for draft policies, guidelines, plans, framework, and other policy documents of DHSUD and other concerned agencies/institutions.',
+                        'Others (to specify in the remarks)'
+                    ];
+                    html += `<td><select name="${fieldName}" data-key="${col.key}" style="min-width: 120px;">`;
+                    html += `<option value="">Select Type of Assistance...</option>`;
+                    assistanceTypes.forEach(type => {
+                        html += `<option value="${type}" ${type === value ? 'selected' : ''}>${type}</option>`;
+                    });
+                    html += `</select></td>`;
                 } else {
                     html += `<td><input type="text" name="${fieldName}" data-key="${col.key}" value="${value}"></td>`;
                 }
