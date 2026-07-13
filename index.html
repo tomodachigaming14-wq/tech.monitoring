@@ -1311,6 +1311,82 @@
     .action-cell .btn-cancel-edit {
         display: none !important;
     }
+	
+		/* ===== BUTTON ANIMATIONS ===== */
+.btn-action {
+    transition: all 0.25s ease !important;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+}
+.btn-action:hover {
+    transform: translateY(-2px) scale(1.05);
+}
+.btn-action:active {
+    transform: scale(0.9);
+}
+.btn-action.btn-edit { background: #f59e0b; color: white; }
+.btn-action.btn-edit:hover { background: #d97706; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); }
+.btn-action.btn-delete { background: #ef4444; color: white; }
+.btn-action.btn-delete:hover { background: #dc2626; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); }
+.btn-action.btn-save-edit { background: #10b981; color: white; }
+.btn-action.btn-save-edit:hover { background: #059669; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); }
+.btn-action.btn-cancel-edit { background: #6b7280; color: white; }
+.btn-action.btn-cancel-edit:hover { background: #4b5563; box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4); }
+
+.btn-action .btn-spinner {
+    display: none;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+.btn-action.loading .btn-spinner { display: inline-block; }
+.btn-action.loading i { display: none; }
+.btn-action.loading { opacity: 0.7; pointer-events: none; }
+
+/* Fix for action buttons in table */
+.modal-body .action-cell .btn-action {
+    padding: 0.3rem 0.7rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Show buttons in editing rows */
+.editing-row .action-cell .btn-action.btn-save-edit,
+.editing-row .action-cell .btn-action.btn-cancel-edit {
+    display: inline-flex !important;
+}
+
+.editing-row .action-cell .btn-action.btn-edit,
+.editing-row .action-cell .btn-action.btn-delete {
+    display: none !important;
+}
+
+/* Show buttons in non-editing rows */
+.action-cell .btn-action.btn-edit,
+.action-cell .btn-action.btn-delete {
+    display: inline-flex !important;
+}
+
+.action-cell .btn-action.btn-save-edit,
+.action-cell .btn-action.btn-cancel-edit {
+    display: none !important;
+}
+	
+	
 </style>
 </head>
 <body>
@@ -2428,101 +2504,110 @@
         }
     }
 
-    // ===== RENDER TABLE WITH EDIT/DELETE BUTTONS =====
-    function renderTable(records) {
-        if (!records || records.length === 0) {
-            modalBody.innerHTML = `<table><thead><tr><th>#</th><th>PSGC</th><th>Region</th><th>Province</th><th>City/Municipality</th><th>Query Details</th><th>Assistance Type</th><th>TA Category</th><th>Planned/Requested</th><th>Date Conducted</th><th>Reporting Month</th><th>Personnel In-Charge</th><th>Actions</th></tr></thead><tbody><tr class="no-records"><td colspan="13">📭 No records found for ${currentFormType}.</td></tr></tbody></table>`;
-            displayCount.textContent = '0';
-            return;
-        }
-
-        const columns = [
-            { key: 'PSGC', label: 'PSGC' },
-            { key: 'Region', label: 'Region' },
-            { key: 'Province', label: 'Province' },
-            { key: 'City/Municipality', label: 'City/Municipality' },
-            { key: 'Query / TA Details', label: 'Query Details' },
-            { key: 'Type of Assistance Provided', label: 'Assistance Type' },
-            { key: 'TA Category', label: 'TA Category' },
-            { key: 'Planned / Requested', label: 'Planned/Requested' },
-            { key: 'Date Conducted', label: 'Date Conducted' },
-            { key: 'Reporting Month', label: 'Reporting Month' },
-            { key: 'Personnel In-Charge', label: 'Personnel In-Charge' }
-        ];
-
-        let html = `<table><thead><tr><th>#</th>`;
-        columns.forEach(col => html += `<th>${col.label}</th>`);
-        html += `<th>Actions</th></tr></thead><tbody>`;
-
-        records.forEach((record, index) => {
-            const rowNum = index + 1;
-            const actualRow = index + 2;
-            const isEditing = editingRowNumber === actualRow;
-
-            html += `<tr class="${isEditing ? 'editing-row' : ''}" data-row="${actualRow}">`;
-            html += `<td>${rowNum}</td>`;
-
-            columns.forEach(col => {
-                let value = record[col.key] || '-';
-                if (col.key === 'Date Conducted') {
-                    value = formatDate(value);
-                }
-
-                if (isEditing) {
-                    const fieldName = col.key.replace(/ /g, '_').replace(/\//g, '_');
-                    if (col.key === 'Query / TA Details' || col.key === 'Remarks' || col.key === 'Link to MOV') {
-                        html += `<td><textarea name="${fieldName}" data-key="${col.key}" rows="1">${value}</textarea></td>`;
-                    } else if (col.key === 'Personnel In-Charge') {
-                        html += `<td><select name="${fieldName}" data-key="${col.key}">`;
-                        html += `<option value="">Select Person...</option>`;
-                        picNames.forEach(name => {
-                            html += `<option value="${name}" ${name === value ? 'selected' : ''}>${name}</option>`;
-                        });
-                        html += `</select></td>`;
-                    } else if (col.key === 'Planned / Requested') {
-                        html += `<td><select name="${fieldName}" data-key="${col.key}">
-                            <option value="Planned" ${value === 'Planned' ? 'selected' : ''}>Planned</option>
-                            <option value="Requested" ${value === 'Requested' ? 'selected' : ''}>Requested</option>
-                        </select></td>`;
-                    } else if (col.key === 'Reporting Month') {
-                        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                        html += `<td><select name="${fieldName}" data-key="${col.key}">`;
-                        months.forEach(m => {
-                            html += `<option value="${m}" ${m === value ? 'selected' : ''}>${m}</option>`;
-                        });
-                        html += `</select></td>`;
-                    } else if (col.key === 'Date Conducted') {
-                        html += `<td><input type="date" name="${fieldName}" data-key="${col.key}" value="${value}"></td>`;
-                    } else {
-                        html += `<td><input type="text" name="${fieldName}" data-key="${col.key}" value="${value}"></td>`;
-                    }
-                } else {
-                    if (value.length > 20) {
-                        value = value.substring(0, 20) + '...';
-                    }
-                    html += `<td>${value}</td>`;
-                }
-            });
-
-            // Actions column
-            html += `<td class="action-cell">`;
-            if (isEditing) {
-                html += `<button class="btn-action btn-save-edit" onclick="saveEditRow(${actualRow})"><i class="fas fa-save"></i></button>`;
-                html += `<button class="btn-action btn-cancel-edit" onclick="cancelEditRow()"><i class="fas fa-times"></i></button>`;
-            } else {
-                html += `<button class="btn-action btn-edit" onclick="startEditRow(${actualRow})"><i class="fas fa-pen"></i></button>`;
-                html += `<button class="btn-action btn-delete" onclick="deleteRecord(${actualRow})"><i class="fas fa-trash"></i></button>`;
-            }
-            html += `</td>`;
-
-            html += `</tr>`;
-        });
-
-        html += `</tbody></table>`;
-        modalBody.innerHTML = html;
-        displayCount.textContent = records.length;
+   // ===== RENDER TABLE WITH EDIT/DELETE BUTTONS =====
+function renderTable(records) {
+    if (!records || records.length === 0) {
+        modalBody.innerHTML = `<table><thead><tr><th>#</th><th>PSGC</th><th>Region</th><th>Province</th><th>City/Municipality</th><th>Query Details</th><th>Assistance Type</th><th>TA Category</th><th>Planned/Requested</th><th>Date Conducted</th><th>Reporting Month</th><th>Personnel In-Charge</th><th>Actions</th></tr></thead><tbody><tr class="no-records"><td colspan="13">📭 No records found for ${currentFormType}.</td></tr></tbody></table>`;
+        displayCount.textContent = '0';
+        return;
     }
 
+    const columns = [
+        { key: 'PSGC', label: 'PSGC' },
+        { key: 'Region', label: 'Region' },
+        { key: 'Province', label: 'Province' },
+        { key: 'City/Municipality', label: 'City/Municipality' },
+        { key: 'Query / TA Details', label: 'Query Details' },
+        { key: 'Type of Assistance Provided', label: 'Assistance Type' },
+        { key: 'TA Category', label: 'TA Category' },
+        { key: 'Planned / Requested', label: 'Planned/Requested' },
+        { key: 'Date Conducted', label: 'Date Conducted' },
+        { key: 'Reporting Month', label: 'Reporting Month' },
+        { key: 'Personnel In-Charge', label: 'Personnel In-Charge' }
+    ];
+
+    let html = `<table><thead><tr><th>#</th>`;
+    columns.forEach(col => html += `<th>${col.label}</th>`);
+    html += `<th>Actions</th></tr></thead><tbody>`;
+
+    records.forEach((record, index) => {
+        const rowNum = index + 1;
+        const actualRow = index + 2;
+        const isEditing = editingRowNumber === actualRow;
+
+        html += `<tr class="${isEditing ? 'editing-row' : ''}" data-row="${actualRow}">`;
+        html += `<td>${rowNum}</td>`;
+
+        columns.forEach(col => {
+            let value = record[col.key] || '-';
+            if (col.key === 'Date Conducted') {
+                value = formatDate(value);
+            }
+
+            if (isEditing) {
+                const fieldName = col.key.replace(/ /g, '_').replace(/\//g, '_');
+                if (col.key === 'Query / TA Details' || col.key === 'Remarks' || col.key === 'Link to MOV') {
+                    html += `<td><textarea name="${fieldName}" data-key="${col.key}" rows="1">${value}</textarea></td>`;
+                } else if (col.key === 'Personnel In-Charge') {
+                    html += `<td><select name="${fieldName}" data-key="${col.key}">`;
+                    html += `<option value="">Select Person...</option>`;
+                    picNames.forEach(name => {
+                        html += `<option value="${name}" ${name === value ? 'selected' : ''}>${name}</option>`;
+                    });
+                    html += `</select></td>`;
+                } else if (col.key === 'Planned / Requested') {
+                    html += `<td><select name="${fieldName}" data-key="${col.key}">
+                        <option value="Planned" ${value === 'Planned' ? 'selected' : ''}>Planned</option>
+                        <option value="Requested" ${value === 'Requested' ? 'selected' : ''}>Requested</option>
+                    </select></td>`;
+                } else if (col.key === 'Reporting Month') {
+                    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                    html += `<td><select name="${fieldName}" data-key="${col.key}">`;
+                    months.forEach(m => {
+                        html += `<option value="${m}" ${m === value ? 'selected' : ''}>${m}</option>`;
+                    });
+                    html += `</select></td>`;
+                } else if (col.key === 'Date Conducted') {
+                    html += `<td><input type="date" name="${fieldName}" data-key="${col.key}" value="${value}"></td>`;
+                } else {
+                    html += `<td><input type="text" name="${fieldName}" data-key="${col.key}" value="${value}"></td>`;
+                }
+            } else {
+                if (value.length > 20) {
+                    value = value.substring(0, 20) + '...';
+                }
+                html += `<td>${value}</td>`;
+            }
+        });
+
+        // Actions column with animated buttons
+        html += `<td class="action-cell">`;
+        if (isEditing) {
+            html += `<button class="btn-action btn-save-edit" onclick="saveEditRow(${actualRow})" id="saveBtn_${actualRow}">
+                <i class="fas fa-save"></i>
+                <span class="btn-spinner"></span>
+            </button>`;
+            html += `<button class="btn-action btn-cancel-edit" onclick="cancelEditRow()">
+                <i class="fas fa-times"></i>
+            </button>`;
+        } else {
+            html += `<button class="btn-action btn-edit" onclick="startEditRow(${actualRow})">
+                <i class="fas fa-pen"></i>
+            </button>`;
+            html += `<button class="btn-action btn-delete" onclick="deleteRecord(${actualRow})" id="deleteBtn_${actualRow}">
+                <i class="fas fa-trash"></i>
+                <span class="btn-spinner"></span>
+            </button>`;
+        }
+        html += `</td>`;
+
+        html += `</tr>`;
+    });
+
+    html += `</tbody></table>`;
+    modalBody.innerHTML = html;
+    displayCount.textContent = records.length;
+}
     // ===== START EDIT =====
     window.startEditRow = function(rowNumber) {
         editingRowNumber = rowNumber;
@@ -2957,6 +3042,7 @@
         document.getElementById('loadingOverlay').classList.add('hidden');
         document.getElementById('mainCard').classList.add('visible');
     }, 3000);
+	
 </script>
 </body>
 </html>
